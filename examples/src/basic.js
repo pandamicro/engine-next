@@ -21,10 +21,11 @@
     }
   ];
 
-  var vertexFormat = [];
-  vertexFormat.push({ name: gfx.ATTR_POSITION, type: gfx.ATTR_TYPE_FLOAT32, num: 3 });
-  vertexFormat.push({ name: gfx.ATTR_COLOR, type: gfx.ATTR_TYPE_INT8, num: 4 });
-  vertexFormat.push({ name: gfx.ATTR_UV0, type: gfx.ATTR_TYPE_FLOAT32, num: 2 });
+  var vertexFormat = new gfx.VertexFormat([
+    { name: gfx.ATTR_POSITION, type: gfx.ATTR_TYPE_FLOAT32, num: 3 },
+    { name: gfx.ATTR_COLOR, type: gfx.ATTR_TYPE_UINT8, num: 4, normalize: true },
+    { name: gfx.ATTR_UV0, type: gfx.ATTR_TYPE_FLOAT32, num: 2 }
+  ]);
 
   var matrix = mat4.create();
 
@@ -55,9 +56,9 @@
       if (voffset !== -1 && ioffset !== -1) {
         bufferId = i;
         // Create data view
-        vertexData = new Float32Array(vb, voffset, 24);
-        uint32Data = new Uint32Array(vb, voffset, 24);
-        indexData = new Uint16Array(ib, ioffset, 12);
+        vertexData = new Float32Array(vb.data, voffset, 24);
+        uint32Data = new Uint32Array(vb.data, voffset, 24);
+        indexData = new Uint16Array(ib.data, ioffset, 6);
         break;
       }
       voffset = -1;
@@ -73,9 +74,9 @@
       voffset = buffer.vb.request(QUAD_BYTES);
       ioffset = buffer.ib.request(INDEX_BYTES);
       // Create data view
-      vertexData = new Float32Array(buffer.vb, voffset, 24);
-      uint32Data = new Uint32Array(buffer.vb, voffset, 24);
-      indexData = new Uint16Array(buffer.ib, ioffset, 12);
+      vertexData = new Float32Array(buffer.vb.data, voffset, 24);
+      uint32Data = new Uint32Array(buffer.vb.data, voffset, 24);
+      indexData = new Uint16Array(buffer.ib.data, ioffset, 6);
     }
 
     // for position
@@ -101,41 +102,41 @@
           y = vertices[i][1],
           wx = x * a + y * c + tx,
           wy = x * b + y * d + ty;
-      vertexData[off] = x;
-      vertexData[off+1] = y;
-      vertexData[off+2] = 0;
+      vertexData[off] = wx;
+      vertexData[off+1] = wy;
+      vertexData[off+2] = node.lpos.z;
       uint32Data[off+3] = color;
       switch (i) {
       case 0: // bl
-        vertexData[off+4] = frame.x / texture.width;
-        vertexData[off+5] = (frame.y + frame.h) / texture.height;
+        vertexData[off+4] = frame.x / texture._width;
+        vertexData[off+5] = (frame.y + frame.h) / texture._height;
         break;
       case 1: // br
-        vertexData[off+4] = (frame.x + frame.w) / texture.width;
-        vertexData[off+5] = (frame.y + frame.h) / texture.height;
+        vertexData[off+4] = (frame.x + frame.w) / texture._width;
+        vertexData[off+5] = (frame.y + frame.h) / texture._height;
         break;
       case 2: // tl
-        vertexData[off+4] = frame.x / texture.width;
-        vertexData[off+5] = frame.y / texture.height;
+        vertexData[off+4] = frame.x / texture._width;
+        vertexData[off+5] = frame.y / texture._height;
         break;
       case 3: // tr
-        vertexData[off+4] = (frame.x + frame.w) / texture.width;
-        vertexData[off+5] = frame.y / texture.height;
+        vertexData[off+4] = (frame.x + frame.w) / texture._width;
+        vertexData[off+5] = frame.y / texture._height;
         break;
       }
     }
     // Assign index data
-    let index = voffset / VERTEX_BYTES;
+    let index = 0;
     indexData[0] = index;
     indexData[1] = index + 1;
     indexData[2] = index + 2;
     indexData[3] = index + 1;
-    indexData[4] = index + 2;
-    indexData[5] = index + 3;
+    indexData[4] = index + 3;
+    indexData[5] = index + 2;
 
     let vb = new gfx.VertexBuffer(
       device,
-      new gfx.VertexFormat(vertexFormat),
+      vertexFormat,
       gfx.USAGE_DYNAMIC,
       vertexData,
       4
@@ -183,6 +184,7 @@
         wrapS: gfx.WRAP_CLAMP,
         wrapT: gfx.WRAP_CLAMP,
         mipmap: false,
+        flipY: false,
         images : [image]
       });
       material.mainTexture = texture;
@@ -191,16 +193,11 @@
       for (let i = 0; i < 100; ++i) {
         let node = new Node(`node_${i}`);
         vec3.set(node.lpos,
-          randomRange(-50, 50),
-          randomRange(-10, 10),
-          0
+          randomRange(-app._canvas.width/2, app._canvas.width/2),
+          randomRange(-app._canvas.height/2, app._canvas.height/2),
+          -100
         );
-        let rot = randomRange(0, 360);
-        quat.fromEuler(node.lrot,
-          rot,
-          rot,
-          0
-        );
+        quat.fromEuler(node.lrot, 0, 0, randomRange(0, 360));
 
         let model = new Model();
         model.setMesh(createSpriteMesh(app.device, node, texture));

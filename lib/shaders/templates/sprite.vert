@@ -1,5 +1,7 @@
-attribute vec3 a_position;
 uniform mat4 viewProj;
+attribute vec3 a_position;
+attribute vec4 a_color;
+varying lowp vec4 v_fragmentColor;
 
 {{#useModel}}
 uniform mat4 model;
@@ -20,4 +22,5 @@ void main () {
   {{/useTexture}}
 
   gl_Position = pos;
+  v_fragmentColor = a_color;
 }

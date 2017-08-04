@@ -14,7 +14,7 @@
     "build:min": "uglifyjs ./dist/engine.dev.js --mangle --source-map url=engine.min.js.map -o ./dist/engine.min.js",
     "dev": "rollup -w -c ./script/rollup.config.js",
     "start": "electron ./examples",
-    "server": "preview -p 8002 -e examples",
+    "server": "preview -p 8003 -e examples",
     "test": "tap test/*.spec.js"
   },
   "repository": {
