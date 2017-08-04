@@ -37,6 +37,7 @@
     "input.js": "^1.1.6",
     "memop": "^1.4.5",
     "renderer.js": "^1.3.0",
+    "scene-graph": "^1.1.2",
     "vmath": "^1.4.4"
   },
   "devDependencies": {
