@@ -59,7 +59,7 @@
     vec3.set(node.lpos,
       randomRange(0, canvas.width),
       randomRange(0, canvas.height),
-      -100
+      0
     );
     quat.fromEuler(node.lrot, 0, 0, randomRange(0, 360));
 
