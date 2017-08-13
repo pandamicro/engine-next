@@ -2,13 +2,12 @@
 import App from './lib/app';
 import Scene from './lib/scene/scene';
 import Camera from './lib/scene/camera';
-import Model from './lib/scene/model';
+import SpriteModel from './lib/scene/sprite-model';
 import resl from './lib/resl';
 
 import SpriteMaterial from './lib/materials/sprite-material';
 
 import Asset from './lib/assets/asset';
-import Mesh from './lib/assets/mesh';
 import Material from './lib/assets/material';
 
 import SharedArrayBuffer from './lib/utils/shared-array-buffer';
@@ -25,14 +24,13 @@ let engine = {
   Scene,
   Node,
   Camera,
-  Model,
+  SpriteModel,
 
   // materials
   SpriteMaterial,
 
   // assets
   Asset,
-  Mesh,
   Material,
 
   // utils

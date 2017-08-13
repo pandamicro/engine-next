@@ -1,33 +1,12 @@
 (() => {
+  'use strict';
   const app = window.app;
   const engine = window.engine;
 
   const resl = engine.resl;
   const gfx = engine.gfx;
-  const { Scene, Node, Model, SpriteMaterial } = engine;
+  const { Scene, Node, SpriteModel, SpriteMaterial } = engine;
   const { mat4, vec3, quat, color4, randomRange } = engine.math;
-  const { Mesh } = engine.renderer;
-  const SharedArrayBuffer = engine.SharedArrayBuffer;
-
-  const VERTEX_BYTES = 24;
-  const QUAD_BYTES = VERTEX_BYTES * 4;
-  const UNIT_VBUFFER_SIZE = QUAD_BYTES * 2000;
-  const INDEX_BYTES = 2 * 6;
-  const UNIT_IBUFFER_SIZE = INDEX_BYTES * 2000;
-  var buffers = [
-    {
-      vb: new SharedArrayBuffer(UNIT_VBUFFER_SIZE),
-      ib: new SharedArrayBuffer(UNIT_IBUFFER_SIZE)
-    }
-  ];
-
-  var vertexFormat = new gfx.VertexFormat([
-    { name: gfx.ATTR_POSITION, type: gfx.ATTR_TYPE_FLOAT32, num: 3 },
-    { name: gfx.ATTR_COLOR, type: gfx.ATTR_TYPE_UINT8, num: 4, normalize: true },
-    { name: gfx.ATTR_UV0, type: gfx.ATTR_TYPE_FLOAT32, num: 2 }
-  ]);
-
-  var matrix = mat4.create();
 
   var frames = [
     {x: 2, y: 2, w: 26, h: 37},
@@ -37,136 +16,118 @@
     {x: 2, y: 164, w: 26, h: 37},
   ];
 
-  let vertices = [
-    [-26 / 2, -37 / 2], // bl
-    [26 / 2, -37 / 2],  // br
-    [-26 / 2, 37 / 2],  // tl
-    [26 / 2, 37 / 2]    // tr
-  ]
-
-  // create mesh
-  function createSpriteMesh (device, node, texture) {
-    // Allocate buffer
-    let bufferId = -1, voffset, ioffset, vertexData, uint32Data, indexData;
-    for (let i = 0, l = buffers.length; i < l; i++) {
-      let vb = buffers[i].vb;
-      let ib = buffers[i].ib;
-      voffset = vb.request(QUAD_BYTES);
-      ioffset = ib.request(INDEX_BYTES);
-      if (voffset !== -1 && ioffset !== -1) {
-        bufferId = i;
-        // Create data view
-        vertexData = new Float32Array(vb.data, voffset, 24);
-        uint32Data = new Uint32Array(vb.data, voffset, 24);
-        indexData = new Uint16Array(ib.data, ioffset, 6);
-        break;
-      }
-      voffset = -1;
-      ioffset = -1;
-    }
-    if (voffset === -1) {
-      let buffer = {
-        vb: new SharedArrayBuffer(UNIT_VBUFFER_SIZE),
-        ib: new SharedArrayBuffer(UNIT_IBUFFER_SIZE)
-      };
-      buffers.push(buffer);
-      bufferId = buffers.length - 1;
-      voffset = buffer.vb.request(QUAD_BYTES);
-      ioffset = buffer.ib.request(INDEX_BYTES);
-      // Create data view
-      vertexData = new Float32Array(buffer.vb.data, voffset, 24);
-      uint32Data = new Uint32Array(buffer.vb.data, voffset, 24);
-      indexData = new Uint16Array(buffer.ib.data, ioffset, 6);
-    }
-
-    // for position
-    node.getWorldMatrix(matrix);
-    let a = matrix.m00,
-        b = matrix.m01,
-        c = matrix.m04,
-        d = matrix.m05,
-        tx = matrix.m12,
-        ty = matrix.m13;
-
-    // for color
-    let color = ((255<<24) >>> 0) + (255<<16) + (255<<8) + 255
-
-    // for uv
-    let frameId = Math.floor(Math.random() * 5);
-    let frame = frames[frameId];
-
-    // Assign vertex data
-    for (let i = 0; i < 4; i++) {
-      let off = i * 6;
-      let x = vertices[i][0],
-          y = vertices[i][1],
-          wx = x * a + y * c + tx,
-          wy = x * b + y * d + ty;
-      vertexData[off] = wx;
-      vertexData[off+1] = wy;
-      vertexData[off+2] = node.lpos.z;
-      uint32Data[off+3] = color;
-      switch (i) {
-      case 0: // bl
-        vertexData[off+4] = frame.x / texture._width;
-        vertexData[off+5] = (frame.y + frame.h) / texture._height;
-        break;
-      case 1: // br
-        vertexData[off+4] = (frame.x + frame.w) / texture._width;
-        vertexData[off+5] = (frame.y + frame.h) / texture._height;
-        break;
-      case 2: // tl
-        vertexData[off+4] = frame.x / texture._width;
-        vertexData[off+5] = frame.y / texture._height;
-        break;
-      case 3: // tr
-        vertexData[off+4] = (frame.x + frame.w) / texture._width;
-        vertexData[off+5] = frame.y / texture._height;
-        break;
-      }
-    }
-    // Assign index data
-    let index = 0;
-    indexData[0] = index;
-    indexData[1] = index + 1;
-    indexData[2] = index + 2;
-    indexData[3] = index + 1;
-    indexData[4] = index + 3;
-    indexData[5] = index + 2;
-
-    let vb = new gfx.VertexBuffer(
-      device,
-      vertexFormat,
-      gfx.USAGE_DYNAMIC,
-      vertexData,
-      4
-    );
-
-    let ib = new gfx.IndexBuffer(
-      device,
-      gfx.INDEX_FMT_UINT16,
-      gfx.USAGE_STATIC,
-      indexData,
-      6
-    );
-
-    let ret = new Mesh(vb, ib);
-    ret.buffer = {
-      bufferId: bufferId,
-      voffset: voffset,
-      ioffset: ioffset
-    }
-    return ret;
-  }
-
   // create material
   let material = new SpriteMaterial();
 
   // scene
   let scene = new Scene();
+  let nodes = [];
 
+  // Add number notification
+  let number = document.createElement('div');
+  number.style.position = 'absolute';
+  number.style.left = '0px';
+  number.style.width = '100%';
+  number.style.top = '50%';
+  number.style.textAlign = 'center';
+  number.style.color = 'rgb(0, 0, 0)';
+  number.style.font = 'bold 50px Helvetica, Arial';
+  document.body.appendChild(number);
+
+  // Add events
+  let canvas = app._canvas;
+  let isAdding = false;
+  function startSpawn () {
+    isAdding = true;
+  }
+  function endSpawn () {
+    isAdding = false;
+  }
+  canvas.addEventListener('mousedown', startSpawn);
+  canvas.addEventListener('touchstart', startSpawn);
+  canvas.addEventListener('mouseup', endSpawn);
+  canvas.addEventListener('mouseleave', endSpawn);
+  canvas.addEventListener('touchend', endSpawn);
+  canvas.addEventListener('touchcancel', endSpawn);
+
+  // Node and models
+  function spawnNode () {
+    let node = new Node('node_' + nodes.length);
+    node.speedX = Math.random() * 10;
+    node.speedY = (Math.random() * 10) - 5;
+
+    vec3.set(node.lpos,
+      randomRange(0, canvas.width),
+      randomRange(0, canvas.height),
+      -100
+    );
+    quat.fromEuler(node.lrot, 0, 0, randomRange(0, 360));
+
+    let frameId = Math.floor(Math.random() * 5);
+    let frame = frames[frameId];
+    let model = new SpriteModel();
+    model.setSpriteFrame(frame);
+    model.setEffect(material._effect);
+    model.setNode(node);
+
+    scene.addModel(model);
+    nodes.push(node);
+  }
+
+  // Settings
+  let gravity = 0.5;
+  let amount = 100;
+  let maxX = canvas.width;
+  let minX = 0;
+  let maxY = canvas.height;
+  let minY = 0;
+
+  // Update
   scene.tick = function () {
+    var bunny, i;
+    if (isAdding) {
+        if (nodes.length < 100000) {
+            for (i = 0; i < amount; i++) {
+              spawnNode();
+            }
+            number.innerText = nodes.length;
+        }
+    }
 
+    for (i = 0; i < nodes.length; i++) 
+    {
+        bunny = nodes[i];
+        
+        var x = (bunny.lpos.x += bunny.speedX);
+        var y = (bunny.lpos.y -= bunny.speedY);
+        bunny.speedY += gravity;
+        
+        if (x > maxX)
+        {
+            bunny.speedX *= -1;
+            bunny.lpos.x = maxX;
+        }
+        else if (x < minX)
+        {
+            bunny.speedX *= -1;
+            bunny.lpos.x = minX;
+        }
+        
+        if (y < minY)
+        {
+            bunny.speedY *= -0.85;
+            bunny.lpos.y = minY;
+            if (Math.random() > 0.5)
+            {
+                bunny.speedY -= Math.random() * 6;
+            }
+        } 
+        else if (y > maxY)
+        {
+            bunny.speedY = 0;
+            bunny.lpos.y = maxY;
+        }
+    }
   }
 
   resl({
@@ -189,23 +150,8 @@
       });
       material.mainTexture = texture;
 
-      // models
-      for (let i = 0; i < 100; ++i) {
-        let node = new Node(`node_${i}`);
-        vec3.set(node.lpos,
-          randomRange(-app._canvas.width/2, app._canvas.width/2),
-          randomRange(-app._canvas.height/2, app._canvas.height/2),
-          -100
-        );
-        quat.fromEuler(node.lrot, 0, 0, randomRange(0, 360));
-
-        let model = new Model();
-        model.setMesh(createSpriteMesh(app.device, node, texture));
-
-        model.setEffect(material._effect);
-        model.setNode(node);
-
-        scene.addModel(model);
+      for (let i = 0; i < 20; ++i) {
+        spawnNode();
       }
     }
   });
