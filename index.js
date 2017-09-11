@@ -11,12 +11,14 @@ import Asset from './lib/assets/asset';
 import Material from './lib/assets/material';
 
 import SharedArrayBuffer from './lib/utils/shared-array-buffer';
+import renderMode from './lib/utils/render-mode';
 
 // deps
 import { Node } from 'scene-graph';
 import * as math from 'vmath';
 import renderer from 'renderer.js';
 import gfx from 'gfx.js';
+import canvas from './lib/canvas';
 
 let engine = {
   // classes
@@ -35,11 +37,13 @@ let engine = {
 
   // utils
   SharedArrayBuffer,
+  renderMode,
 
   // modules
   math,
   renderer,
   gfx,
+  canvas,
 
   // DELME: temporary
   resl,

@@ -3,8 +3,8 @@
   const app = window.app;
   const engine = window.engine;
 
-  const resl = engine.resl;
-  const gfx = engine.gfx;
+  const { resl, gfx, canvas, renderMode } = engine;
+  const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
   const { Scene, Node, SpriteModel, SpriteMaterial } = engine;
   const { mat4, vec3, quat, color4, randomRange } = engine.math;
 
@@ -35,7 +35,7 @@
   document.body.appendChild(number);
 
   // Add events
-  let canvas = app._canvas;
+  let canvasElt = app._canvas;
   let isAdding = false;
   function startSpawn () {
     isAdding = true;
@@ -43,12 +43,12 @@
   function endSpawn () {
     isAdding = false;
   }
-  canvas.addEventListener('mousedown', startSpawn);
-  canvas.addEventListener('touchstart', startSpawn);
-  canvas.addEventListener('mouseup', endSpawn);
-  canvas.addEventListener('mouseleave', endSpawn);
-  canvas.addEventListener('touchend', endSpawn);
-  canvas.addEventListener('touchcancel', endSpawn);
+  canvasElt.addEventListener('mousedown', startSpawn);
+  canvasElt.addEventListener('touchstart', startSpawn);
+  canvasElt.addEventListener('mouseup', endSpawn);
+  canvasElt.addEventListener('mouseleave', endSpawn);
+  canvasElt.addEventListener('touchend', endSpawn);
+  canvasElt.addEventListener('touchcancel', endSpawn);
 
   // Node and models
   function spawnNode () {
@@ -57,8 +57,8 @@
     node.speedY = (Math.random() * 10) - 5;
 
     vec3.set(node.lpos,
-      randomRange(0, canvas.width),
-      randomRange(0, canvas.height),
+      randomRange(0, canvasElt.width),
+      randomRange(0, canvasElt.height),
       0
     );
     quat.fromEuler(node.lrot, 0, 0, randomRange(0, 360));
@@ -77,9 +77,9 @@
   // Settings
   let gravity = 0.5;
   let amount = 100;
-  let maxX = canvas.width;
+  let maxX = canvasElt.width;
   let minX = 0;
-  let maxY = canvas.height;
+  let maxY = canvasElt.height;
   let minY = 0;
 
   // Update
@@ -139,7 +139,7 @@
     },
     onDone (assets) {
       let image = assets.image;
-      let texture = new gfx.Texture2D(app.device, {
+      let texture = new Texture2D(app.device, {
         width : image.width,
         height: image.height,
         wrapS: gfx.WRAP_CLAMP,
