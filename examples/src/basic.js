@@ -2,10 +2,12 @@
   'use strict';
   const app = window.app;
   const engine = window.engine;
+  const resl = window.resl;
 
-  const { resl, gfx, canvas, renderMode } = engine;
+  const { gfx, canvas, renderMode } = engine;
   const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
-  const { Scene, Node, SpriteModel, SpriteMaterial } = engine;
+  const { Scene, SpriteModel, SpriteMaterial } = engine;
+  const Node = window.sgraph.Node;
   const { mat4, vec3, quat, color4, randomRange } = engine.math;
 
   var frames = [

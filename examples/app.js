@@ -1,15 +1,10 @@
-import gfx from 'gfx.js';
-import canvas from './canvas/index.js';
-import Input from 'input.js';
-import ForwardRendererWebGL from './forward-renderer-webgl.js';
-import ForwardRendererCanvas from './forward-renderer-canvas.js';
-import chunks from './shaders/chunks/index.js';
-import templates from './shaders/templates/index.js';
-import renderMode from './utils/render-mode.js';
+'use strict';
 
+window.App = (() => {
+
+const { gfx, canvas, ForwardRenderer, renderMode, shaders } = window.engine;
 const Device = renderMode.supportWebGL ? gfx.Device : canvas.Device;
 const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
-const ForwardRenderer = renderMode.supportWebGL ? ForwardRendererWebGL : ForwardRendererCanvas;
 
 function _initBuiltins(device) {
   let canvas = document.createElement('canvas');
@@ -72,7 +67,7 @@ function _makeTick(app_) {
   };
 }
 
-export default class App {
+class App {
   constructor(canvas, opts) {
     // sub-systems
     this._canvas = canvas;
@@ -83,8 +78,8 @@ export default class App {
     let builtins = _initBuiltins(this._device);
     this._forward = new ForwardRenderer(this._device, {
       defaultTexture: builtins.defaultTexture,
-      programTemplates: templates,
-      programChunks: chunks,
+      programTemplates: shaders.templates,
+      programChunks: shaders.chunks,
     });
 
     // life callback
@@ -141,3 +136,7 @@ export default class App {
     }
   }
 }
+
+return App;
+
+})();

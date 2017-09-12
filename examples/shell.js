@@ -1,8 +1,9 @@
 'use strict';
 
 (() => {
-  const { App, Camera } = window.engine;
+  const { Camera } = window.engine;
   const { vec3 } = window.engine.math;
+  const App = window.App;
 
   function _loadPromise(url) {
     return new Promise((resolve, reject) => {

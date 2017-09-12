@@ -2,6 +2,9 @@
  * (c) 2016 Mikola Lysenko. MIT License
  * https://github.com/regl-project/resl
  */
+'use strict';
+
+window.resl = (() => {
 
 /* global XMLHttpRequest */
 const configParameters = [
@@ -48,7 +51,7 @@ function Loader(name, cancel) {
   this.cancel = cancel;
 }
 
-export default function resl(config) {
+function resl(config) {
   if (typeof config !== 'object' || !config) {
     raise('invalid or missing configuration');
   }
@@ -430,3 +433,7 @@ export default function resl(config) {
     }, 1);
   }
 }
+
+return resl;
+
+})();
