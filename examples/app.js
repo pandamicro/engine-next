@@ -2,9 +2,7 @@
 
 window.App = (() => {
 
-const { gfx, canvas, ForwardRenderer, renderMode, shaders } = window.engine;
-const Device = renderMode.supportWebGL ? gfx.Device : canvas.Device;
-const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
+const { gfx, canvas, Device, ForwardRenderer, Texture2D, renderMode, shaders } = window.engine;
 
 function _initBuiltins(device) {
   let canvas = document.createElement('canvas');

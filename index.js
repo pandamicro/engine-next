@@ -15,17 +15,23 @@ import Material from './lib/assets/material';
 import SharedArrayBuffer from './lib/utils/shared-array-buffer';
 import renderMode from './lib/utils/render-mode';
 
-const ForwardRenderer = renderMode.supportWebGL ? ForwardRendererWebGL : ForwardRendererCanvas;
-
 // deps
 import * as math from 'vmath';
 import renderer from 'renderer.js';
 import gfx from 'gfx.js';
 import canvas from './lib/canvas';
 
+const ForwardRenderer = renderMode.supportWebGL ? ForwardRendererWebGL : ForwardRendererCanvas;
+const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
+const Device = renderMode.supportWebGL ? gfx.Device : canvas.Device;
+
 let renderEngine = {
-  // render scene
+  // core classes
+  Device,
   ForwardRenderer,
+  Texture2D,
+
+  // render scene
   Scene,
   Camera,
   SpriteModel,
