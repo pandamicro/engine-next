@@ -11,11 +11,11 @@
   const { mat4, vec3, quat, color4, randomRange } = engine.math;
 
   var frames = [
-    {x: 2, y: 2, w: 26, h: 37},
-    {x: 2, y: 47, w: 26, h: 37},
-    {x: 2, y: 86, w: 26, h: 37},
-    {x: 2, y: 125, w: 26, h: 37},
-    {x: 2, y: 164, w: 26, h: 37},
+    new SpriteFrame({x: 2, y: 2, width: 26, height: 37}),
+    new SpriteFrame({x: 2, y: 47, width: 26, height: 37}),
+    new SpriteFrame({x: 2, y: 86, width: 26, height: 37}),
+    new SpriteFrame({x: 2, y: 125, width: 26, height: 37}),
+    new SpriteFrame({x: 2, y: 164, width: 26, height: 37}),
   ];
 
   // create material
@@ -68,7 +68,7 @@
     let frameId = Math.floor(Math.random() * 5);
     let frame = frames[frameId];
     let model = new SpriteModel();
-    model.setSpriteFrame(frame);
+    model.spriteFrame = frame;
     model.setEffect(material._effect);
     model.setNode(node);
 
