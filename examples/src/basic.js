@@ -6,17 +6,26 @@
 
   const { gfx, canvas, renderMode } = engine;
   const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
-  const { Scene, SpriteModel, SpriteMaterial } = engine;
+  const { Scene, SpriteModel, SlicedModel, SpriteMaterial } = engine;
   const Node = window.sgraph.Node;
   const { mat4, vec3, quat, color4, randomRange } = engine.math;
 
-  var frames = [
+  let frames = [
     new SpriteFrame({x: 2, y: 2, width: 26, height: 37}),
     new SpriteFrame({x: 2, y: 47, width: 26, height: 37}),
     new SpriteFrame({x: 2, y: 86, width: 26, height: 37}),
     new SpriteFrame({x: 2, y: 125, width: 26, height: 37}),
     new SpriteFrame({x: 2, y: 164, width: 26, height: 37}),
   ];
+
+  // Sliced sprite frames
+  for (let i = 0; i < frames.length; i++) {
+    let frame = frames[i];
+    frame.insetTop = 10;
+    frame.insetBottom = 10;
+    frame.insetLeft = 5;
+    frame.insetRight = 5;
+  }
 
   // create material
   let material = new SpriteMaterial();
@@ -64,14 +73,16 @@
       0
     );
     quat.fromEuler(node.lrot, 0, 0, randomRange(0, 360));
+    // vec3.set(node.lscale, 3, 3, 1);
 
     let frameId = Math.floor(Math.random() * 5);
     let frame = frames[frameId];
-    let model = new SpriteModel();
+    let model = SlicedModel.alloc();
+    model.width = 54;
+    model.height = 70;
     model.spriteFrame = frame;
     model.setEffect(material._effect);
     model.setNode(node);
-
     scene.addModel(model);
     nodes.push(node);
   }
