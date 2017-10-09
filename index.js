@@ -5,7 +5,9 @@ import shaders from './lib/shaders/index.js';
 
 import Scene from './lib/scene/scene';
 import Camera from './lib/scene/camera';
+
 import SpriteModel from './lib/scene/sprite-model';
+import SlicedModel from './lib/scene/sliced-model';
 
 import SpriteMaterial from './lib/materials/sprite-material';
 
@@ -34,7 +36,10 @@ let renderEngine = {
   // render scene
   Scene,
   Camera,
+
+  // models
   SpriteModel,
+  SlicedModel,
   
   // assets
   Asset,
