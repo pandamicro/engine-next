@@ -1,7 +1,7 @@
 // intenral
-import ForwardRendererWebGL from './lib/forward-renderer-webgl.js';
-import ForwardRendererCanvas from './lib/forward-renderer-canvas.js';
-import shaders from './lib/shaders/index.js';
+import ForwardRendererWebGL from './lib/forward-renderer-webgl';
+import ForwardRendererCanvas from './lib/forward-renderer-canvas';
+import shaders from './lib/shaders/index';
 
 import Scene from './lib/scene/scene';
 import Camera from './lib/scene/camera';
@@ -16,6 +16,7 @@ import Material from './lib/assets/material';
 
 import SharedArrayBuffer from './lib/utils/shared-array-buffer';
 import renderMode from './lib/utils/render-mode';
+import MaterialUtil from './lib/utils/material-util';
 
 // deps
 import * as math from 'vmath';
@@ -54,6 +55,7 @@ let renderEngine = {
   // utils
   SharedArrayBuffer,
   renderMode,
+  MaterialUtil,
 
   // modules
   math,
