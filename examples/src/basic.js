@@ -64,6 +64,8 @@
   // Node and models
   function spawnNode () {
     let node = new Node('node_' + nodes.length);
+    node.width = 54;
+    node.height = 70;
     node.speedX = Math.random() * 10;
     node.speedY = (Math.random() * 10) - 5;
 
@@ -77,9 +79,8 @@
 
     let frameId = Math.floor(Math.random() * 5);
     let frame = frames[frameId];
-    let model = SlicedModel.alloc();
-    model.width = 54;
-    model.height = 70;
+    // let model = SlicedModel.alloc();
+    let model = SpriteModel.alloc();
     model.spriteFrame = frame;
     model.setEffect(material._effect);
     model.setNode(node);
