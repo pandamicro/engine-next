@@ -5,10 +5,17 @@
   const resl = window.resl;
 
   const { gfx, canvas, renderMode } = engine;
-  const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
-  const { Scene, SpriteModel, SlicedModel, SpriteMaterial } = engine;
-  const Node = window.sgraph.Node;
+  const { Scene, Camera, SpriteModel, SlicedModel, SpriteMaterial } = engine;
   const { mat4, vec3, quat, color4, randomRange } = engine.math;
+  const builtins = window.builtins;
+  const Node = window.sgraph.Node;
+  const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
+
+  // Renderer
+  
+  let forwardRenderer = new ForwardRenderer(this._device, builtins);
+
+  // Case related
 
   let frames = [
     new SpriteFrame({x: 2, y: 2, width: 26, height: 37}),
@@ -97,7 +104,7 @@
   let minY = 0;
 
   // Update
-  scene.tick = function () {
+  var updateBunnies = function () {
     var bunny, i;
     if (isAdding) {
         if (nodes.length < 100000) {
@@ -170,5 +177,20 @@
     }
   });
 
-  return scene;
+  // add camera
+  let camera = new Camera({
+    x: 0, y: 0, w: canvas.width, h: canvas.height
+  });
+  camera.setStages([
+    'transparent'
+  ]);
+  scene.addCamera(camera);
+
+  let time = 0;
+
+  return function tick(dt) {
+    time += dt;
+    updateBunnies();
+    forwardRenderer.render(scene);
+  };
 })();

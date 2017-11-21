@@ -1,9 +1,36 @@
 'use strict';
 
 (() => {
-  const { Camera } = window.engine;
-  const { vec3 } = window.engine.math;
-  const App = window.App;
+  const { vec3 } = window.vmath;
+  const gfx = window.gfx;
+
+  function _builtin(device) {
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext('2d');
+
+    // default texture
+    canvas.width = canvas.height = 128;
+    context.fillStyle = '#ddd';
+    context.fillRect(0, 0, 128, 128);
+    context.fillStyle = '#555';
+    context.fillRect(0, 0, 64, 64);
+    context.fillStyle = '#555';
+    context.fillRect(64, 64, 64, 64);
+
+    let defaultTexture = new gfx.Texture2D(device, {
+      images: [canvas],
+      width: 128,
+      height: 128,
+      wrapS: gfx.WRAP_REPEAT,
+      wrapT: gfx.WRAP_REPEAT,
+      format: gfx.TEXTURE_FMT_RGB8,
+      mipmap: true,
+    });
+
+    return {
+      defaultTexture
+    };
+  }
 
   function _loadPromise(url) {
     return new Promise((resolve, reject) => {
@@ -37,10 +64,10 @@
       if (view.firstElementChild) {
         view.firstElementChild.remove();
       }
-
-      if (window.app) {
-        window.app.destroy();
-        window.app = null;
+      
+      if (window.input) {
+        window.input.destroy();
+        window.input = null;
       }
 
       // create new canvas
@@ -48,26 +75,46 @@
       canvas.classList.add('fit');
       canvas.tabIndex = -1;
       view.appendChild(canvas);
-
-      // init app
-      let app = new App(canvas);
-      app.resize();
-      window.app = app;
-
-      // init example modules
-      let scene = eval(`${result}\n//# sourceURL=${url}`);
-
-      // add camera
-      let camera = new Camera({
-        x: 0, y: 0, w: canvas.width, h: canvas.height
+      
+      let device = new window.gfx.Device(canvas);
+      let builtins = _builtin(device);
+      let input = new window.Input(canvas, {
+        lock: true
       });
 
-      app.onTick = function () {
+      window.canvas = canvas;
+      window.device = device;
+      window.builtins = builtins;
+      window.input = input;
+      
+      let tick = null;
+      let lasttime = 0;
+
+      // update
+      function animate(timestamp) {
+        window.reqID = requestAnimationFrame(animate);
+
+        if (timestamp === undefined) {
+          timestamp = 0;
+        }
+        let dt = (timestamp - lasttime) / 1000;
+        lasttime = timestamp;
+
         window.stats.tick();
-        scene.tick();
-      };
-      app.setCamera(camera);
-      app.run(scene);
+
+        if (tick) {
+          tick(dt);
+        }
+
+        window.input.reset();
+      }
+
+      window.reqID = window.requestAnimationFrame(() => {
+        _resize();
+
+        tick = eval(`${result}\n//# sourceURL=${url}`);
+        animate();
+      });
 
     }).catch(err => {
       console.error(err);
