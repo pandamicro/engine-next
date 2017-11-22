@@ -2,7 +2,8 @@
 
 (() => {
   const { vec3 } = window.vmath;
-  const gfx = window.gfx;
+  const engine = window.engine;
+  const shaders = engine.shaders;
 
   function _builtin(device) {
     let canvas = document.createElement('canvas');
@@ -17,18 +18,20 @@
     context.fillStyle = '#555';
     context.fillRect(64, 64, 64, 64);
 
-    let defaultTexture = new gfx.Texture2D(device, {
+    let defaultTexture = new engine.Texture2D(device, {
       images: [canvas],
       width: 128,
       height: 128,
-      wrapS: gfx.WRAP_REPEAT,
-      wrapT: gfx.WRAP_REPEAT,
-      format: gfx.TEXTURE_FMT_RGB8,
+      wrapS: engine.gfx.WRAP_REPEAT,
+      wrapT: engine.gfx.WRAP_REPEAT,
+      format: engine.gfx.TEXTURE_FMT_RGB8,
       mipmap: true,
     });
 
     return {
-      defaultTexture
+      defaultTexture: defaultTexture,
+      programTemplates: shaders.templates, 
+      programChunks: shaders.chunks, 
     };
   }
 
@@ -64,11 +67,6 @@
       if (view.firstElementChild) {
         view.firstElementChild.remove();
       }
-      
-      if (window.input) {
-        window.input.destroy();
-        window.input = null;
-      }
 
       // create new canvas
       let canvas = document.createElement('canvas');
@@ -76,16 +74,12 @@
       canvas.tabIndex = -1;
       view.appendChild(canvas);
       
-      let device = new window.gfx.Device(canvas);
+      let device = new window.engine.Device(canvas);
       let builtins = _builtin(device);
-      let input = new window.Input(canvas, {
-        lock: true
-      });
 
       window.canvas = canvas;
       window.device = device;
       window.builtins = builtins;
-      window.input = input;
       
       let tick = null;
       let lasttime = 0;
@@ -105,8 +99,6 @@
         if (tick) {
           tick(dt);
         }
-
-        window.input.reset();
       }
 
       window.reqID = window.requestAnimationFrame(() => {
@@ -119,6 +111,16 @@
     }).catch(err => {
       console.error(err);
     });
+  }
+
+  function _resize() {
+    if (!window.canvas) {
+      return;
+    }
+
+    let bcr = window.canvas.parentElement.getBoundingClientRect();
+    window.canvas.width = bcr.width;
+    window.canvas.height = bcr.height;
   }
 
   document.addEventListener('readystatechange', () => {

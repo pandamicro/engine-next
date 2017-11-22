@@ -1,19 +1,19 @@
 (() => {
   'use strict';
-  const app = window.app;
+  const device = window.device;
+  const canvas = window.canvas;
   const engine = window.engine;
   const resl = window.resl;
 
-  const { gfx, canvas, renderMode } = engine;
-  const { Scene, Camera, SpriteModel, SlicedModel, SpriteMaterial } = engine;
+  const { gfx, renderMode } = engine;
+  const { Scene, Camera, SpriteModel, SlicedModel, SpriteMaterial, Texture2D, ForwardRenderer } = engine;
   const { mat4, vec3, quat, color4, randomRange } = engine.math;
   const builtins = window.builtins;
   const Node = window.sgraph.Node;
-  const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
 
   // Renderer
   
-  let forwardRenderer = new ForwardRenderer(this._device, builtins);
+  let forwardRenderer = new ForwardRenderer(device, builtins);
 
   // Case related
 
@@ -53,7 +53,7 @@
   document.body.appendChild(number);
 
   // Add events
-  let canvasElt = app._canvas;
+  let canvasElt = canvas;
   let isAdding = false;
   function startSpawn () {
     isAdding = true;
@@ -160,7 +160,7 @@
     },
     onDone (assets) {
       let image = assets.image;
-      let texture = new Texture2D(app.device, {
+      let texture = new Texture2D(device, {
         width : image.width,
         height: image.height,
         wrapS: gfx.WRAP_CLAMP,
