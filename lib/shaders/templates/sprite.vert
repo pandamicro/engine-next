@@ -15,6 +15,8 @@ varying vec2 uv0;
 void main () {
   vec4 pos = viewProj{{#useModel}} * model{{/useModel}} * vec4(a_position, 1);
 
+  v_fragmentColor = a_color;
+  
   {{#useTexture}}
   uv0 = a_uv0;
   {{/useTexture}}
