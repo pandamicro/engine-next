@@ -13,14 +13,11 @@ varying vec2 uv0;
 {{/useTexture}}
 
 void main () {
-  vec4 pos = vec4(a_position, 1);
-
-  pos = viewProj{{#useModel}} * model{{/useModel}} * pos;
+  vec4 pos = viewProj{{#useModel}} * model{{/useModel}} * vec4(a_position, 1);
 
   {{#useTexture}}
   uv0 = a_uv0;
   {{/useTexture}}
 
   gl_Position = pos;
-  v_fragmentColor = a_color;
 }

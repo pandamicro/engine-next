@@ -1,16 +1,22 @@
 {{#useTexture}}
-uniform sampler2D mainTexture;
+uniform sampler2D texture;
 varying vec2 uv0;
 {{/useTexture}}
 
-varying vec4 v_fragmentColor;
+{{#useColor}}
+uniform vec4 color;
+{{/useColor}}
 
 void main () {
-  vec4 o = v_fragmentColor;;
+  vec4 o = vec4(1, 1, 1, 1);
 
   {{#useTexture}}
-  o *= texture2D(mainTexture, uv0);
+  o *= texture2D(texture, uv0);
   {{/useTexture}}
+
+  {{#useColor}}
+  o *= color;
+  {{/useColor}}
 
   gl_FragColor = o;
 }

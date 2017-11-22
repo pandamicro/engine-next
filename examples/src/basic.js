@@ -169,7 +169,7 @@
         flipY: false,
         images : [image]
       });
-      material.mainTexture = texture;
+      material.texture = texture;
 
       for (let i = 0; i < 20; ++i) {
         spawnNode();
