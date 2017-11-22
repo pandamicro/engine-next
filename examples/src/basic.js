@@ -1,14 +1,21 @@
 (() => {
   'use strict';
-  const app = window.app;
+  const device = window.device;
+  const canvas = window.canvas;
   const engine = window.engine;
   const resl = window.resl;
 
-  const { gfx, canvas, renderMode } = engine;
-  const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
-  const { Scene, SpriteModel, SlicedModel, SpriteMaterial } = engine;
-  const Node = window.sgraph.Node;
+  const { gfx, renderMode } = engine;
+  const { Scene, Camera, SpriteModel, SlicedModel, SpriteMaterial, Texture2D, ForwardRenderer } = engine;
   const { mat4, vec3, quat, color4, randomRange } = engine.math;
+  const builtins = window.builtins;
+  const Node = window.sgraph.Node;
+
+  // Renderer
+  
+  let forwardRenderer = new ForwardRenderer(device, builtins);
+
+  // Case related
 
   let frames = [
     new SpriteFrame({x: 2, y: 2, width: 26, height: 37}),
@@ -46,7 +53,7 @@
   document.body.appendChild(number);
 
   // Add events
-  let canvasElt = app._canvas;
+  let canvasElt = canvas;
   let isAdding = false;
   function startSpawn () {
     isAdding = true;
@@ -97,7 +104,7 @@
   let minY = 0;
 
   // Update
-  scene.tick = function () {
+  var updateBunnies = function () {
     var bunny, i;
     if (isAdding) {
         if (nodes.length < 100000) {
@@ -153,7 +160,7 @@
     },
     onDone (assets) {
       let image = assets.image;
-      let texture = new Texture2D(app.device, {
+      let texture = new Texture2D(device, {
         width : image.width,
         height: image.height,
         wrapS: gfx.WRAP_CLAMP,
@@ -162,7 +169,7 @@
         flipY: false,
         images : [image]
       });
-      material.mainTexture = texture;
+      material.texture = texture;
 
       for (let i = 0; i < 20; ++i) {
         spawnNode();
@@ -170,5 +177,20 @@
     }
   });
 
-  return scene;
+  // add camera
+  let camera = new Camera({
+    x: 0, y: 0, w: canvas.width, h: canvas.height
+  });
+  camera.setStages([
+    'transparent'
+  ]);
+  scene.addCamera(camera);
+
+  let time = 0;
+
+  return function tick(dt) {
+    time += dt;
+    updateBunnies();
+    forwardRenderer.render(scene);
+  };
 })();

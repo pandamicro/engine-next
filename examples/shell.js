@@ -1,9 +1,39 @@
 'use strict';
 
 (() => {
-  const { Camera } = window.engine;
-  const { vec3 } = window.engine.math;
-  const App = window.App;
+  const { vec3 } = window.vmath;
+  const engine = window.engine;
+  const shaders = engine.shaders;
+
+  function _builtin(device) {
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext('2d');
+
+    // default texture
+    canvas.width = canvas.height = 128;
+    context.fillStyle = '#ddd';
+    context.fillRect(0, 0, 128, 128);
+    context.fillStyle = '#555';
+    context.fillRect(0, 0, 64, 64);
+    context.fillStyle = '#555';
+    context.fillRect(64, 64, 64, 64);
+
+    let defaultTexture = new engine.Texture2D(device, {
+      images: [canvas],
+      width: 128,
+      height: 128,
+      wrapS: engine.gfx.WRAP_REPEAT,
+      wrapT: engine.gfx.WRAP_REPEAT,
+      format: engine.gfx.TEXTURE_FMT_RGB8,
+      mipmap: true,
+    });
+
+    return {
+      defaultTexture: defaultTexture,
+      programTemplates: shaders.templates, 
+      programChunks: shaders.chunks, 
+    };
+  }
 
   function _loadPromise(url) {
     return new Promise((resolve, reject) => {
@@ -38,40 +68,59 @@
         view.firstElementChild.remove();
       }
 
-      if (window.app) {
-        window.app.destroy();
-        window.app = null;
-      }
-
       // create new canvas
       let canvas = document.createElement('canvas');
       canvas.classList.add('fit');
       canvas.tabIndex = -1;
       view.appendChild(canvas);
+      
+      let device = new window.engine.Device(canvas);
+      let builtins = _builtin(device);
 
-      // init app
-      let app = new App(canvas);
-      app.resize();
-      window.app = app;
+      window.canvas = canvas;
+      window.device = device;
+      window.builtins = builtins;
+      
+      let tick = null;
+      let lasttime = 0;
 
-      // init example modules
-      let scene = eval(`${result}\n//# sourceURL=${url}`);
+      // update
+      function animate(timestamp) {
+        window.reqID = requestAnimationFrame(animate);
 
-      // add camera
-      let camera = new Camera({
-        x: 0, y: 0, w: canvas.width, h: canvas.height
-      });
+        if (timestamp === undefined) {
+          timestamp = 0;
+        }
+        let dt = (timestamp - lasttime) / 1000;
+        lasttime = timestamp;
 
-      app.onTick = function () {
         window.stats.tick();
-        scene.tick();
-      };
-      app.setCamera(camera);
-      app.run(scene);
+
+        if (tick) {
+          tick(dt);
+        }
+      }
+
+      window.reqID = window.requestAnimationFrame(() => {
+        _resize();
+
+        tick = eval(`${result}\n//# sourceURL=${url}`);
+        animate();
+      });
 
     }).catch(err => {
       console.error(err);
     });
+  }
+
+  function _resize() {
+    if (!window.canvas) {
+      return;
+    }
+
+    let bcr = window.canvas.parentElement.getBoundingClientRect();
+    window.canvas.width = bcr.width;
+    window.canvas.height = bcr.height;
   }
 
   document.addEventListener('readystatechange', () => {

@@ -3,7 +3,6 @@ import ForwardRendererWebGL from './lib/forward-renderer-webgl';
 import ForwardRendererCanvas from './lib/forward-renderer-canvas';
 import shaders from './lib/shaders/index';
 
-import Scene from './lib/scene/scene';
 import Camera from './lib/scene/camera';
 
 import SpriteModel from './lib/scene/sprite-model';
@@ -24,6 +23,7 @@ import renderer from 'renderer.js';
 import gfx from 'gfx.js';
 import canvas from './lib/canvas';
 
+const Scene = renderer.Scene;
 const ForwardRenderer = renderMode.supportWebGL ? ForwardRendererWebGL : ForwardRendererCanvas;
 const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
 const Device = renderMode.supportWebGL ? gfx.Device : canvas.Device;
