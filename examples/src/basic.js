@@ -75,6 +75,7 @@
     node.height = 70;
     node.speedX = Math.random() * 10;
     node.speedY = (Math.random() * 10) - 5;
+    node._anchorPoint = {x: 0.5, y: 0.5};
 
     vec3.set(node.lpos,
       randomRange(0, canvasElt.width),
