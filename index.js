@@ -4,16 +4,13 @@ import ForwardRendererCanvas from './lib/forward-renderer-canvas';
 import shaders from './lib/shaders/index';
 
 import Camera from './lib/scene/camera';
-
-import SpriteModel from './lib/scene/sprite-model';
-import SlicedModel from './lib/scene/sliced-model';
+import RenderData from './lib/scene/render-data';
 
 import SpriteMaterial from './lib/materials/sprite-material';
 
 import Asset from './lib/assets/asset';
 import Material from './lib/assets/material';
 
-import SharedArrayBuffer from './lib/utils/shared-array-buffer';
 import renderMode from './lib/utils/render-mode';
 import MaterialUtil from './lib/utils/material-util';
 
@@ -21,12 +18,15 @@ import MaterialUtil from './lib/utils/material-util';
 import * as math from 'vmath';
 import renderer from 'renderer.js';
 import gfx from 'gfx.js';
+import { RecyclePool } from 'memop';
 import canvas from './lib/canvas';
 
 const Scene = renderer.Scene;
 const ForwardRenderer = renderMode.supportWebGL ? ForwardRendererWebGL : ForwardRendererCanvas;
 const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
 const Device = renderMode.supportWebGL ? gfx.Device : canvas.Device;
+const Model = renderer.Model;
+const InputAssembler = renderer.InputAssembler;
 
 let renderEngine = {
   // core classes
@@ -37,10 +37,9 @@ let renderEngine = {
   // render scene
   Scene,
   Camera,
-
-  // models
-  SpriteModel,
-  SlicedModel,
+  Model,
+  RenderData,
+  InputAssembler,
   
   // assets
   Asset,
@@ -53,9 +52,11 @@ let renderEngine = {
   shaders,
 
   // utils
-  SharedArrayBuffer,
   renderMode,
   MaterialUtil,
+
+  // memop
+  RecyclePool,
 
   // modules
   math,
