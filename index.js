@@ -18,7 +18,7 @@ import MaterialUtil from './lib/utils/material-util';
 import * as math from 'vmath';
 import renderer from 'renderer.js';
 import gfx from 'gfx.js';
-import { RecyclePool } from 'memop';
+import { RecyclePool, Pool } from 'memop';
 import canvas from './lib/canvas';
 
 const Scene = renderer.Scene;
@@ -57,6 +57,7 @@ let renderEngine = {
 
   // memop
   RecyclePool,
+  Pool,
 
   // modules
   math,
