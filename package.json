@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/pandamicro/engine-next/issues",
   "dependencies": {
-    "gfx.js": "^1.2.11",
+    "gfx.js": "^1.2.12",
     "input.js": "^1.1.6",
     "memop": "^1.6.0",
     "renderer.js": "^1.5.2",
