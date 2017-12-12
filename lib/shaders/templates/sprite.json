@@ -1,4 +1,5 @@
 {
   "useTexture": {},
-  "useModel": {}
+  "useModel": {},
+  "alphaTest": {}
 }
