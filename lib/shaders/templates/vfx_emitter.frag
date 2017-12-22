@@ -9,7 +9,7 @@ uniform sampler2D state;
 uniform vec2 statesize;
 uniform vec2 noisesize;
 uniform float dt;
-uniform int mode;
+uniform float mode;
 uniform float noiseId;
 uniform float emitVar;
 
@@ -102,7 +102,7 @@ vec4 initDeltaColor (vec4 startR, float randr, float randg, float randb, float r
 vec4 initSize (float rand1, float rand2) {
     float start = max(0.0, size + sizeVar * rand1);
     if (endSize == START_SIZE_EQUAL_TO_END_SIZE) {
-        float delta = 0;
+        float delta = 0.0;
         return vec4(encode(start, sizeScale), encode(delta, sizeScale));
     }
     else {
@@ -121,7 +121,7 @@ vec4 initRotation (float rand1, float rand2) {
 
 vec4 initControl1 (float rand1, float rand2) {
     /* Mode A: gravity, direction (control1), tangential accel & radial accel (control2) */
-    if (mode == 0) {
+    if (mode == 0.0) {
         float pAngle = angle + angleVar * rand1;
         float dirX = cos(pAngle);
         float dirY = sin(pAngle);
@@ -138,7 +138,7 @@ vec4 initControl1 (float rand1, float rand2) {
 
 vec4 initControl2 (float startR1, float rand1, float rand2) {
     /* Mode A: gravity, direction (control1), tangential accel & radial accel (control2) */
-    if (mode == 0) {
+    if (mode == 0.0) {
         float pRadial = radial + radialVar * rand1;
         float pTangent = tangent + tangentVar * rand2;
         return vec4(encode(pRadial, accelScale), encode(pTangent, accelScale));
@@ -167,23 +167,23 @@ void main() {
     vec2 pixel = floor(index * statesize);
     vec2 pindex = floor(pixel / 3.0);
     vec2 temp = mod(pixel, vec2(3.0, 3.0));
-    int id = floor(temp.y * 3.0 + temp.x);
-
+    float id = floor(temp.y * 3.0 + temp.x);
+    
     vec4 lifeData = texture2D(state, pindex * 3.0 / statesize);
     float rest = decode(lifeData.rg, LIFE_SCALE);
     float life = decode(lifeData.ba, LIFE_SCALE);
     /* Active particle, skip */
-    if (rest != life || id == 7) {
+    if (rest != life || id == 7.0) {
         vec4 data = texture2D(state, index);
         gl_FragColor = data;
         return;
     }
 
-    vec2 nid = pixel + vec2(floor(noiseId / 4.0), mod(noiseId % vec2(4.0, 4.0)));
+    vec2 nid = pixel + vec2(floor(noiseId / 4.0), mod(noiseId, 4.0));
     vec4 randomD = texture2D(noise, nid / noisesize);
 
     /* Life */
-    if (id == 0) {
+    if (id == 0.0) {
         vec4 data = texture2D(state, index);
         gl_FragColor = initLife(data, randomD);
         return;
@@ -193,7 +193,7 @@ void main() {
     float random2 = decode(randomD.ba, NOISE_SCALE);
 
     /* Color */
-    if (id == 1) {
+    if (id == 1.0) {
         vec4 randomD7 = texture2D(noise, vec2(nid.x, nid.y + 2.0) / noisesize);
         float random3 = decode(randomD7.rg, NOISE_SCALE);
         float random4 = decode(randomD7.ba, NOISE_SCALE);
@@ -201,10 +201,10 @@ void main() {
         return;
     }
     /* Delta color */
-    if (id == 2) {
+    if (id == 2.0) {
         vec4 randomD1 = texture2D(noise, vec2(nid.x - 1.0, nid.y) / noisesize);
         float startR1 = decode(randomD1.rg, NOISE_SCALE);
-        float startR2 = decode(randomD2.rg, NOISE_SCALE);
+        float startR2 = decode(randomD1.ba, NOISE_SCALE);
         vec4 randomD7 = texture2D(noise, vec2(nid.x, nid.y + 2.0) / noisesize);
         float random3 = decode(randomD7.rg, NOISE_SCALE);
         float random4 = decode(randomD7.ba, NOISE_SCALE);
@@ -213,29 +213,29 @@ void main() {
         return;
     }
     /* Size and delta size */
-    if (id == 3) {
+    if (id == 3.0) {
         gl_FragColor = initSize(random1, random2);
         return;
     }
     /* Rotation and delta rotation */
-    if (id == 4) {
+    if (id == 4.0) {
         gl_FragColor = initRotation(random1, random2);
         return;
     }
     /* Control1 */
-    if (id == 5) {
+    if (id == 5.0) {
         gl_FragColor = initControl1(random1, random2);
         return;
     }
     /* Control2 */
-    if (id == 6) {
+    if (id == 6.0) {
         vec4 randomD5 = texture2D(noise, vec2(nid.x + 2.0, nid.y - 1.0) / noisesize);
         float startR1 = decode(randomD5.rg, NOISE_SCALE);
         gl_FragColor = initControl2(startR1, random1, random2);
         return;
     }
     /* Position */
-    if (id == 8) {
+    if (id == 8.0) {
         gl_FragColor = initPos(random1, random2);
         return;
     }
