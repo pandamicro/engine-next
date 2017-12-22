@@ -5,7 +5,7 @@ precision highp float;
 uniform sampler2D state;
 uniform vec2 statesize;
 uniform float dt;
-uniform int mode;
+uniform float mode;
 uniform vec2 gravity;
 uniform float sizeScale;
 uniform float dirScale;
@@ -56,13 +56,14 @@ vec4 updateRotation (vec4 data, float life) {
     return vec4(encode(rotation, ROTATION_SCALE), data.ba);
 }
 
-vec4 updateControl (vec4 control1, vec4 control2, vec4 pos) {
+vec4 updateControl (vec4 control1, vec4 control2, vec4 posData, float life) {
     /* Mode A: gravity, direction (control1), tangential accel & radial accel (control2) */
-    if (mode == 0) {
+    if (mode == 0.0) {
         vec2 dir = vec2(decode(control1.rg, dirScale), decode(control1.ba, dirScale));
         float radialAccel = decode(control2.rg, accelScale);
         float tangentialAccel = decode(control2.ba, accelScale);
 
+        vec2 pos = vec2(decode(posData.rg, POSITION_SCALE), decode(posData.ba, POSITION_SCALE));
         vec2 radial = normalize(pos);
         vec2 tangential = vec2(-radial.y, radial.x);
         radial = radial * radialAccel;
@@ -83,19 +84,18 @@ vec4 updateControl (vec4 control1, vec4 control2, vec4 pos) {
     }
 }
 
-vec4 updatePos (vec4 pos, vec4 control) {
+vec4 updatePos (vec4 posData, vec4 control) {
     vec2 result;
     /* Mode A */
-    if (mode == 0) {
+    if (mode == 0.0) {
         vec2 dir = vec2(decode(control.rg, dirScale), decode(control.ba, dirScale));
-
-        result = p + dir * dt;
+        vec2 pos = vec2(decode(posData.rg, POSITION_SCALE), decode(posData.ba, POSITION_SCALE));
+        result = pos + dir * dt;
     }
     /* Mode B */
     else {
         float angle = radians(decode(control.rg, ROTATION_SCALE));
         float radius = decode(control.ba, radiusScale);
-
         result.x = -cos(angle) * radius;
         result.y = -sin(angle) * radius;
     }
@@ -106,7 +106,7 @@ void main() {
     vec2 pixel = floor(index * statesize);
     vec2 pindex = floor(pixel / 3.0);
     vec2 temp = mod(pixel, vec2(3.0, 3.0));
-    int id = floor(temp.y * 3 + temp.x);
+    float id = floor(temp.y * 3.0 + temp.x);
 
     /* skip dead particles */
     vec4 data = texture2D(state, index);
@@ -118,46 +118,46 @@ void main() {
     }
 
     /* no need to update helper data */
-    if (id == 2 || id == 6 || id == 7) {
+    if (id == 2.0 || id == 6.0 || id == 7.0) {
         gl_FragColor = data;
         return;
     }
 
     float life = decode(lifeData.ba, LIFE_SCALE);
     /* Rest life and total life */
-    if (id == 0) {
+    if (id == 0.0) {
         gl_FragColor = updateLife(data);
         return;
     }
     /* Color */
-    if (id == 1) {
+    if (id == 1.0) {
         vec2 dcIndex = vec2(pixel.x + 1.0, pixel.y) / statesize;
         vec4 deltaColor = texture2D(state, dcIndex);
         gl_FragColor = updateColor(data, deltaColor, life);
         return;
     }
     /* Size and delta size */
-    if (id == 3) {
+    if (id == 3.0) {
         gl_FragColor = updateSize(data, life);
         return;
     }
     /* Rotation and delta rotation */
-    if (id == 4) {
+    if (id == 4.0) {
         gl_FragColor = updateRotation(data, life);
         return;
     }
     /* Control */
-    if (id == 5) {
+    if (id == 5.0) {
         vec2 ctrlIndex = vec2(pixel.x - 2.0, pixel.y + 1.0) / statesize;
         vec4 control2 = texture2D(state, ctrlIndex);
         vec2 posIndex = vec2(pixel.x, pixel.y + 1.0) / statesize;
         vec4 pos = texture2D(state, posIndex);
-        gl_FragColor = updateControl(data, control2, pos);
+        gl_FragColor = updateControl(data, control2, pos, life);
         return;
     }
     /* Position */
-    if (id == 8) {
-        vec2 ctrlIndex = vec(pixel.x, pixel.y - 1.0) / statesize;
+    if (id == 8.0) {
+        vec2 ctrlIndex = vec2(pixel.x, pixel.y - 1.0) / statesize;
         vec4 control1 = texture2D(state, ctrlIndex);
         gl_FragColor = updatePos(data, control1);
         return;
