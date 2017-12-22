@@ -1,7 +1,3 @@
-#ifdef GL_ES
-precision highp float;
-#endif
-
 uniform sampler2D state;
 uniform vec2 quadsize;
 uniform vec2 statesize;
