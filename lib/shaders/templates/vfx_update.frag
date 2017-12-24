@@ -4,7 +4,6 @@ uniform float dt;
 uniform float mode;
 uniform vec2 gravity;
 uniform float sizeScale;
-uniform float dirScale;
 uniform float accelScale;
 uniform float radiusScale;
 
@@ -55,7 +54,7 @@ vec4 updateRotation (vec4 data, float life) {
 vec4 updateControl (vec4 control1, vec4 control2, vec4 posData, float life) {
     /* Mode A: gravity, direction (control1), tangential accel & radial accel (control2) */
     if (mode == 0.0) {
-        vec2 dir = vec2(decode(control1.rg, dirScale), decode(control1.ba, dirScale));
+        vec2 dir = vec2(decode(control1.rg, POSITION_SCALE), decode(control1.ba, POSITION_SCALE));
         float radialAccel = decode(control2.rg, accelScale);
         float tangentialAccel = decode(control2.ba, accelScale);
 
@@ -65,7 +64,7 @@ vec4 updateControl (vec4 control1, vec4 control2, vec4 posData, float life) {
         radial = radial * radialAccel;
         tangential = tangential * tangentialAccel;
         vec2 result = dir + (radial + tangentialAccel + gravity) * dt;
-        return vec4(encode(result.x, accelScale), encode(result.y, accelScale));
+        return vec4(encode(result.x, POSITION_SCALE), encode(result.y, POSITION_SCALE));
     }
     /* Mode B: angle & radius (control1), degreesPerSecond & deltaRadius (control2) */
     else {
@@ -84,7 +83,7 @@ vec4 updatePos (vec4 posData, vec4 control) {
     vec2 result;
     /* Mode A */
     if (mode == 0.0) {
-        vec2 dir = vec2(decode(control.rg, dirScale), decode(control.ba, dirScale));
+        vec2 dir = vec2(decode(control.rg, POSITION_SCALE), decode(control.ba, POSITION_SCALE));
         vec2 pos = vec2(decode(posData.rg, POSITION_SCALE), decode(posData.ba, POSITION_SCALE));
         result = pos + dir * dt;
     }
@@ -101,7 +100,7 @@ vec4 updatePos (vec4 posData, vec4 control) {
 void main() {
     vec2 pixel = floor(index * statesize);
     vec2 pindex = floor(pixel / 3.0);
-    vec2 temp = mod(pixel, vec2(3.0, 3.0));
+    vec2 temp = mod(pixel, vec2(3.0));
     float id = floor(temp.y * 3.0 + temp.x);
 
     /* skip dead particles */

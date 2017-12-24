@@ -2,7 +2,7 @@
 precision highp float;
 #endif
 
-attribute vec2 index;
+attribute vec2 a_quad;
 
 uniform sampler2D state;
 uniform sampler2D quad;
@@ -24,7 +24,7 @@ float decode(vec2 channels, float scale) {
 }
 
 void main() {
-    vec2 pIndex = (index / 2.0) * 3.0;
+    vec2 pIndex = (a_quad / 2.0) * 3.0;
     vec4 lifeData = texture2D(state, pIndex);
     float life = decode(lifeData.rg, LIFE_SCALE);
 
@@ -44,7 +44,7 @@ void main() {
         v_fragmentColor = color;
 
         float u, v;
-        vec2 uvId = mod(index, vec2(2.0, 2.0));
+        vec2 uvId = mod(a_quad, vec2(2.0, 2.0));
         if (uvId.x == 0.0) {
             u = us[0];
         }

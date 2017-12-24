@@ -41,7 +41,6 @@ uniform float rotatePS;
 uniform float rotatePSVar;
 
 uniform float sizeScale;
-uniform float dirScale;
 uniform float accelScale;
 uniform float radiusScale;
 
@@ -49,7 +48,7 @@ varying vec2 index;
 
 const float BASE = 255.0;
 const float OFFSET = BASE * BASE / 2.0;
-const float NOISE_SCALE = BASE * BASE;
+const float NOISE_SCALE = 10000.0;
 const float POSITION_SCALE = 1.0;
 const float ROTATION_SCALE = 1.0;
 const float LIFE_SCALE = 60.0;
@@ -67,32 +66,45 @@ vec2 encode(float value, float scale) {
     return vec2(x, y) / BASE;
 }
 
+float randomMinus1To1(vec2 randomD) {
+    float random = decode(randomD, NOISE_SCALE);
+    return (random - 0.5) * 2.0;
+}
+
+bool doEmit (vec4 randomD) {
+    float random1 = decode(randomD.rg, NOISE_SCALE);
+    if ((life + lifeVar) * random1 < life) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 vec4 initLife (vec4 data, vec4 randomD) {
     /* decide whether to revive particle */
-    float rest = decode(data.rg, LIFE_SCALE);
-    if (rest <= 0.0) {
-        float random1 = decode(randomD.rg, NOISE_SCALE);
-        if (random1 * lifeVar < emitVar) {
-            float random2 = decode(randomD.ba, NOISE_SCALE);
-            float plife = life + lifeVar * random2;
-            vec2 l = encode(plife, LIFE_SCALE);
-            return vec4(l, l);
-        }
+    if (doEmit(randomD)) {
+        float random2 = randomMinus1To1(randomD.ba);
+        float plife = life + lifeVar * random2;
+        vec2 l = encode(plife, LIFE_SCALE);
+        return vec4(l, l);
     }
-    return data;
+    else {
+        return data;
+    }
 }
 
 vec4 initColor (float randr, float randg, float randb, float randa) {
     vec4 random = vec4(randr, randg, randb, randa);
     vec4 result = clamp(color + colorVar * random, 0.0, 255.0);
-    return result;
+    return result / 255.0;
 }
 
 vec4 initDeltaColor (vec4 startR, float randr, float randg, float randb, float randa) {
     vec4 random = vec4(randr, randg, randb, randa);
     vec4 start = clamp(color + colorVar * startR, 0.0, 255.0);
     vec4 end = clamp(endColor + endColorVar * random, 0.0, 255.0);
-    return (end - start);
+    return (end - start) / 255.0;
 }
 
 vec4 initSize (float rand1, float rand2) {
@@ -122,7 +134,7 @@ vec4 initControl1 (float rand1, float rand2) {
         float dirX = cos(pAngle);
         float dirY = sin(pAngle);
         float pSpeed = speed + speedVar * rand2;
-        return vec4(encode(dirX * pSpeed, dirScale), encode(dirY * pSpeed, dirScale));
+        return vec4(encode(dirX * pSpeed, POSITION_SCALE), encode(dirY * pSpeed, POSITION_SCALE));
     }
     /* Mode B: angle & radius (control1), degreesPerSecond & deltaRadius (control2) */
     else {
@@ -164,46 +176,63 @@ void main() {
     vec2 pindex = floor(pixel / 3.0);
     vec2 temp = mod(pixel, vec2(3.0, 3.0));
     float id = floor(temp.y * 3.0 + temp.x);
+
+    vec2 noffset = vec2(floor(noiseId / 4.0), mod(noiseId, 4.0));
+    vec2 nid = pixel + noffset;
+    vec4 randomD = texture2D(noise, nid / noisesize);
     
     vec4 lifeData = texture2D(state, pindex * 3.0 / statesize);
     float rest = decode(lifeData.rg, LIFE_SCALE);
     float life = decode(lifeData.ba, LIFE_SCALE);
+    /* Life */
+    if (id == 0.0) {
+        vec4 data = texture2D(state, index);
+        if (rest <= 0.0) {
+            gl_FragColor = initLife(data, randomD);
+        }
+        else {
+            gl_FragColor = data;
+        }
+        return;
+    }
+
     /* Active particle, skip */
-    if (rest != life || id == 7.0) {
+    if (rest > 0.0 || id == 7.0) {
         vec4 data = texture2D(state, index);
         gl_FragColor = data;
         return;
     }
 
-    vec2 nid = pixel + vec2(floor(noiseId / 4.0), mod(noiseId, 4.0));
-    vec4 randomD = texture2D(noise, nid / noisesize);
+    vec2 lifeNid = pindex * 3.0 + noffset;
+    vec4 lifeRandomD = texture2D(noise, lifeNid / noisesize);
+    bool emitting = doEmit(lifeRandomD);
 
-    /* Life */
-    if (id == 0.0) {
+    if (!emitting) {
         vec4 data = texture2D(state, index);
-        gl_FragColor = initLife(data, randomD);
+        gl_FragColor = data;
         return;
     }
 
-    float random1 = decode(randomD.rg, NOISE_SCALE);
-    float random2 = decode(randomD.ba, NOISE_SCALE);
+    /* Emitting */
+    float random1 = randomMinus1To1(randomD.rg);
+    float random2 = randomMinus1To1(randomD.ba);
 
     /* Color */
     if (id == 1.0) {
         vec4 randomD7 = texture2D(noise, vec2(nid.x, nid.y + 2.0) / noisesize);
-        float random3 = decode(randomD7.rg, NOISE_SCALE);
-        float random4 = decode(randomD7.ba, NOISE_SCALE);
+        float random3 = randomMinus1To1(randomD7.rg);
+        float random4 = randomMinus1To1(randomD7.ba);
         gl_FragColor = initColor(random1, random2, random3, random4);
         return;
     }
     /* Delta color */
     if (id == 2.0) {
         vec4 randomD1 = texture2D(noise, vec2(nid.x - 1.0, nid.y) / noisesize);
-        float startR1 = decode(randomD1.rg, NOISE_SCALE);
-        float startR2 = decode(randomD1.ba, NOISE_SCALE);
+        float startR1 = randomMinus1To1(randomD1.rg);
+        float startR2 = randomMinus1To1(randomD1.ba);
         vec4 randomD7 = texture2D(noise, vec2(nid.x, nid.y + 2.0) / noisesize);
-        float random3 = decode(randomD7.rg, NOISE_SCALE);
-        float random4 = decode(randomD7.ba, NOISE_SCALE);
+        float random3 = randomMinus1To1(randomD7.rg);
+        float random4 = randomMinus1To1(randomD7.ba);
         vec4 startR = vec4(startR1, startR2, random3, random4);
         gl_FragColor = initDeltaColor(startR, random1, random2, random3, random4);
         return;
@@ -226,7 +255,7 @@ void main() {
     /* Control2 */
     if (id == 6.0) {
         vec4 randomD5 = texture2D(noise, vec2(nid.x + 2.0, nid.y - 1.0) / noisesize);
-        float startR1 = decode(randomD5.rg, NOISE_SCALE);
+        float startR1 = randomMinus1To1(randomD5.rg);
         gl_FragColor = initControl2(startR1, random1, random2);
         return;
     }
