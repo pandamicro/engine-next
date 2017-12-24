@@ -34,15 +34,15 @@ void main() {
 
     dataIndex = (pIndex + 1.0) / statesize;
     vec4 rotData = texture2D(state, dataIndex);
-    float rot = radians(decode(rotData.rg, ROTATION_SCALE));
+    float rot = radians(floor(decode(rotData.rg, ROTATION_SCALE)));
 
     float a = cos(rot);
     float b = -sin(rot);
     float c = -b;
     float d = a;
 
-    vec2 vert = (mod(floor(index * quadsize), vec2(2.0, 2.0)) - 0.5) * size;
-    float x = vert.x * a + vert.y * c;
-    float y = vert.x * b + vert.y * d;
+    vec2 vert = (mod(floor(index * quadsize), vec2(2.0)) - 0.5) * size;
+    float x = vert.x * a + vert.y * c + pos.x;
+    float y = vert.x * b + vert.y * d + pos.y;
     gl_FragColor = vec4(encode(x, POSITION_SCALE), encode(y, POSITION_SCALE));
 }

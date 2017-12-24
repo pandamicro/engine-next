@@ -7,6 +7,7 @@ attribute vec2 a_quad;
 uniform sampler2D state;
 uniform sampler2D quad;
 uniform vec2 statesize;
+uniform vec2 quadsize;
 uniform float z;
 uniform vec2 us;
 uniform vec2 vs;
@@ -24,8 +25,8 @@ float decode(vec2 channels, float scale) {
 }
 
 void main() {
-    vec2 pIndex = (a_quad / 2.0) * 3.0;
-    vec4 lifeData = texture2D(state, pIndex);
+    vec2 sIndex = floor(a_quad * statesize / 2.0) * 3.0;
+    vec4 lifeData = texture2D(state, sIndex / statesize);
     float life = decode(lifeData.rg, LIFE_SCALE);
 
     if (life <= 0.0) {
@@ -34,17 +35,17 @@ void main() {
         uv0 = vec2(0.0, 0.0);
     }
     else {
-        vec2 posIndex = (pIndex + 2.0) / statesize;
-        vec4 posData = texture2D(state, posIndex);
+        vec2 posIndex = a_quad / quadsize;
+        vec4 posData = texture2D(quad, posIndex);
         vec2 pos = vec2(decode(posData.rg, POSITION_SCALE), decode(posData.ba, POSITION_SCALE));
-        vec2 cIndex = vec2(pIndex.x + 1.0, pIndex.y) / statesize;
+        vec2 cIndex = vec2(sIndex.x + 1.0, sIndex.y) / statesize;
         vec4 color = texture2D(state, cIndex);
 
         gl_Position = vec4(pos, z, 1.0);
         v_fragmentColor = color;
 
         float u, v;
-        vec2 uvId = mod(a_quad, vec2(2.0, 2.0));
+        vec2 uvId = mod(a_quad, vec2(2.0));
         if (uvId.x == 0.0) {
             u = us[0];
         }

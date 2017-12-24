@@ -11,6 +11,7 @@ varying vec2 index;
 
 const float BASE = 255.0;
 const float OFFSET = BASE * BASE / 2.0;
+const float MAX_VALUE = BASE * BASE;
 const float LIFE_SCALE = 60.0;
 const float POSITION_SCALE = 1.0;
 const float ROTATION_SCALE = 1.0;
@@ -33,14 +34,14 @@ vec4 updateLife (vec4 data) {
 }
 
 vec4 updateColor (vec4 color, vec4 deltaColor, float life) {
-    color += deltaColor * dt / life;
+    color = clamp(color + deltaColor * dt / life, 0.0, 255.0);
     return color;
 }
 
 vec4 updateSize (vec4 data, float life) {
     float size = decode(data.rg, sizeScale);
     float deltaSize = decode(data.ba, sizeScale);
-    size += deltaSize * dt / life;
+    size = clamp(size + deltaSize * dt / life, 0.0, MAX_VALUE);
     return vec4(encode(size, sizeScale), data.ba);
 }
 
