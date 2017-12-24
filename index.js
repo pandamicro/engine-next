@@ -6,13 +6,14 @@ import shaders from './lib/shaders/index';
 import Camera from './lib/scene/camera';
 import RenderData from './lib/scene/render-data';
 
-import SpriteMaterial from './lib/materials/sprite-material';
 
 import Asset from './lib/assets/asset';
 import Material from './lib/assets/material';
+import MaterialUtil from './lib/utils/material-util';
+import SpriteMaterial from './lib/materials/sprite-material';
+import StencilMaterial from './lib/materials/stencil-material';
 
 import renderMode from './lib/utils/render-mode';
-import MaterialUtil from './lib/utils/material-util';
 
 // deps
 import * as math from 'vmath';
@@ -47,6 +48,7 @@ let renderEngine = {
   
   // materials
   SpriteMaterial,
+  StencilMaterial,
 
   // shaders
   shaders,
