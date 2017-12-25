@@ -27,12 +27,12 @@ void main() {
     vec4 posData = texture2D(state, dataIndex);
     vec2 pos = vec2(decode(posData.rg, POSITION_SCALE), decode(posData.ba, POSITION_SCALE));
 
-    dataIndex.x = pIndex.x / statesize.x;
-    dataIndex.y = (pIndex.y + 1.0) / statesize.y;
+    dataIndex = (pIndex + 1.0) / statesize;
     vec4 sizeData = texture2D(state, dataIndex);
     float size = decode(sizeData.rg, sizeScale);
 
-    dataIndex = (pIndex + 1.0) / statesize;
+    dataIndex.x = (pIndex.x + 2.0) / statesize.x;
+    dataIndex.y = (pIndex.y + 1.0) / statesize.y;
     vec4 rotData = texture2D(state, dataIndex);
     float rot = radians(floor(decode(rotData.rg, ROTATION_SCALE)));
 

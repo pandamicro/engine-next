@@ -51,6 +51,7 @@ const float OFFSET = BASE * BASE / 2.0;
 const float NOISE_SCALE = 10000.0;
 const float POSITION_SCALE = 1.0;
 const float ROTATION_SCALE = 1.0;
+const float COLOR_SCALE = 1.0;
 const float LIFE_SCALE = 60.0;
 const float START_SIZE_EQUAL_TO_END_SIZE = -1.0;
 const float START_RADIUS_EQUAL_TO_END_RADIUS = -1.0;
@@ -100,11 +101,18 @@ vec4 initColor (float randr, float randg, float randb, float randa) {
     return result / 255.0;
 }
 
-vec4 initDeltaColor (vec4 startR, float randr, float randg, float randb, float randa) {
-    vec4 random = vec4(randr, randg, randb, randa);
-    vec4 start = clamp(color + colorVar * startR, 0.0, 255.0);
-    vec4 end = clamp(endColor + endColorVar * random, 0.0, 255.0);
-    return (end - start) / 255.0;
+vec4 initDeltaRG (vec2 startR, vec2 random) {
+    vec2 start = clamp(color.rg + colorVar.rg * startR, 0.0, 255.0);
+    vec2 end = clamp(endColor.rg + endColorVar.rg * random, 0.0, 255.0);
+    vec2 delta = end - start;
+    return vec4(encode(delta.x, COLOR_SCALE), encode(delta.y, COLOR_SCALE));
+}
+
+vec4 initDeltaBA (vec2 startR, vec2 random) {
+    vec2 start = clamp(color.ba + colorVar.ba * startR, 0.0, 255.0);
+    vec2 end = clamp(endColor.ba + endColorVar.ba * random, 0.0, 255.0);
+    vec2 delta = end - start;
+    return vec4(encode(delta.x, COLOR_SCALE), encode(delta.y, COLOR_SCALE));
 }
 
 vec4 initSize (float rand1, float rand2) {
@@ -197,7 +205,7 @@ void main() {
     }
 
     /* Active particle, skip */
-    if (rest > 0.0 || id == 7.0) {
+    if (rest > 0.0) {
         vec4 data = texture2D(state, index);
         gl_FragColor = data;
         return;
@@ -219,43 +227,46 @@ void main() {
 
     /* Color */
     if (id == 1.0) {
-        vec4 randomD7 = texture2D(noise, vec2(nid.x, nid.y + 2.0) / noisesize);
-        float random3 = randomMinus1To1(randomD7.rg);
-        float random4 = randomMinus1To1(randomD7.ba);
+        vec4 randomD3 = texture2D(noise, vec2(nid.x - 1.0, nid.y + 1.0) / noisesize);
+        float random3 = randomMinus1To1(randomD3.rg);
+        float random4 = randomMinus1To1(randomD3.ba);
         gl_FragColor = initColor(random1, random2, random3, random4);
         return;
     }
-    /* Delta color */
+    /* Delta color RG */
     if (id == 2.0) {
         vec4 randomD1 = texture2D(noise, vec2(nid.x - 1.0, nid.y) / noisesize);
         float startR1 = randomMinus1To1(randomD1.rg);
         float startR2 = randomMinus1To1(randomD1.ba);
-        vec4 randomD7 = texture2D(noise, vec2(nid.x, nid.y + 2.0) / noisesize);
-        float random3 = randomMinus1To1(randomD7.rg);
-        float random4 = randomMinus1To1(randomD7.ba);
-        vec4 startR = vec4(startR1, startR2, random3, random4);
-        gl_FragColor = initDeltaColor(startR, random1, random2, random3, random4);
+        vec2 startR = vec2(startR1, startR2);
+        gl_FragColor = initDeltaRG(startR, vec2(random1, random2));
+        return;
+    }
+    /* Delta color BA */
+    if (id == 3.0) {
+        vec2 startR = vec2(random1, random2);
+        gl_FragColor = initDeltaBA(startR, vec2(random1, random2));
         return;
     }
     /* Size and delta size */
-    if (id == 3.0) {
+    if (id == 4.0) {
         gl_FragColor = initSize(random1, random2);
         return;
     }
     /* Rotation and delta rotation */
-    if (id == 4.0) {
+    if (id == 5.0) {
         gl_FragColor = initRotation(random1, random2);
         return;
     }
     /* Control1 */
-    if (id == 5.0) {
+    if (id == 6.0) {
         gl_FragColor = initControl1(random1, random2);
         return;
     }
     /* Control2 */
-    if (id == 6.0) {
-        vec4 randomD5 = texture2D(noise, vec2(nid.x + 2.0, nid.y - 1.0) / noisesize);
-        float startR1 = randomMinus1To1(randomD5.rg);
+    if (id == 7.0) {
+        vec4 randomD6 = texture2D(noise, vec2(nid.x - 1.0, nid.y) / noisesize);
+        float startR1 = randomMinus1To1(randomD6.rg);
         gl_FragColor = initControl2(startR1, random1, random2);
         return;
     }
