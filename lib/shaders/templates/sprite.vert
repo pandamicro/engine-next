@@ -13,13 +13,13 @@ varying lowp vec4 v_fragmentColor;
 #endif
 
 void main () {
-  vec4 pos;
+  mat4 mvp;
   #ifdef useModel
-    pos = model * vec4(a_position, 1);
+    mvp = viewProj * model;
   #else
-    pos = vec4(a_position, 1);
+    mvp = viewProj;
   #endif
-  pos = viewProj * pos;
+  vec4 pos = mvp * vec4(a_position, 1);
 
   v_fragmentColor = a_color;
   
