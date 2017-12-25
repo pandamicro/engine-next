@@ -48,19 +48,19 @@ void main() {
         float u, v;
         vec2 uvId = mod(a_quad, vec2(2.0));
         if (uvId.x == 0.0) {
-            u = us[0];
+            u = lb.x;
         }
         else {
-            u = us[1];
+            u = rt.x;
         }
         if (uvId.y == 0.0) {
-            v = vs[0];
+            v = lb.y;
         }
         else {
-            v = vs[1];
+            v = rt.y;
         }
         uv0 = vec2(u, v);
 
-        gl_Position = model * viewProj * vec4(pos, z, 1.0);
+        gl_Position = viewProj * model * vec4(pos, z, 1.0);
     }    
 }
