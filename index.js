@@ -12,6 +12,7 @@ import Asset from './lib/assets/asset';
 import Material from './lib/assets/material';
 import MaterialUtil from './lib/utils/material-util';
 import SpriteMaterial from './lib/materials/sprite-material';
+import GraySpriteMaterial from './lib/materials/gray-sprite-material';
 import StencilMaterial from './lib/materials/stencil-material';
 import ParticleMaterial from './lib/materials/particle-material';
 
@@ -53,6 +54,7 @@ let renderEngine = {
   
   // materials
   SpriteMaterial,
+  GraySpriteMaterial,
   StencilMaterial,
   ParticleMaterial,
 
