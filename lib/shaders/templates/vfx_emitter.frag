@@ -4,6 +4,7 @@ uniform sampler2D state;
 /* uniform mat4 model;*/
 uniform vec2 statesize;
 uniform vec2 noisesize;
+uniform bool stopped;
 uniform float dt;
 uniform float mode;
 uniform float noiseId;
@@ -74,7 +75,7 @@ float randomMinus1To1(vec2 randomD) {
 
 bool doEmit (vec4 randomD) {
     float random1 = decode(randomD.rg, NOISE_SCALE);
-    if ((life + lifeVar) * random1 < life) {
+    if (!stopped && (life + lifeVar) * random1 < life) {
         return true;
     }
     else {
