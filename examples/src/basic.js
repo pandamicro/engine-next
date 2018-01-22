@@ -4,16 +4,13 @@
   const canvas = window.canvas;
   const engine = window.engine;
   const resl = window.resl;
+  const walker = window.walker;
 
-  const { gfx, renderMode } = engine;
-  const { Scene, Camera, SpriteModel, SlicedModel, SpriteMaterial, Texture2D, ForwardRenderer } = engine;
-  const { mat4, vec3, quat, color4, randomRange } = engine.math;
+  const { gfx, RenderData } = engine;
+  const { Scene, Camera, SpriteMaterial, Texture2D } = engine;
+  const { vec3, quat, randomRange } = engine.math;
   const builtins = window.builtins;
   const Node = window.sgraph.Node;
-
-  // Renderer
-  
-  let forwardRenderer = new ForwardRenderer(device, builtins);
 
   // Case related
 
@@ -75,7 +72,7 @@
     node.height = 70;
     node.speedX = Math.random() * 10;
     node.speedY = (Math.random() * 10) - 5;
-    node._anchorPoint = {x: 0.5, y: 0.5};
+    node.anchorPoint = {x: 0.5, y: 0.5};
 
     vec3.set(node.lpos,
       randomRange(0, canvasElt.width),
@@ -83,16 +80,16 @@
       0
     );
     quat.fromEuler(node.lrot, 0, 0, randomRange(0, 360));
-    // vec3.set(node.lscale, 3, 3, 1);
+    vec3.set(node.lscale, 0.5, 0.5, 1);
 
     let frameId = Math.floor(Math.random() * 5);
-    let frame = frames[frameId];
-    // let model = SlicedModel.alloc();
-    let model = SpriteModel.alloc();
-    model.spriteFrame = frame;
-    model.setEffect(material._effect);
-    model.setNode(node);
-    scene.addModel(model);
+    node.frame = frames[frameId];
+    let renderData = RenderData.alloc();
+    renderData.dataLength = 4;
+    renderData.vertexCount = 4;
+    renderData.indiceCount = 6;
+    renderData.effect = material._effect;
+    node.renderData = renderData;
     nodes.push(node);
   }
 
@@ -149,6 +146,8 @@
             bunny.speedY = 0;
             bunny.lpos.y = maxY;
         }
+
+        bunny.renderData.vertDirty = true;
     }
   }
 
@@ -178,6 +177,8 @@
     }
   });
 
+  walker.init(device, builtins);
+
   // add camera
   let camera = new Camera({
     x: 0, y: 0, w: canvas.width, h: canvas.height
@@ -192,6 +193,7 @@
   return function tick(dt) {
     time += dt;
     updateBunnies();
-    forwardRenderer.render(scene);
+
+    walker.renderScene(scene, nodes);
   };
 })();
