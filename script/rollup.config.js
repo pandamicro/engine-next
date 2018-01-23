@@ -20,16 +20,26 @@ let moduleName = 'engine';
 fsJetpack.dir(dest, { empty: true });
 
 module.exports = {
-  entry: './index.js',
-  targets: [
-    { dest: `${dest}/${file}.dev.js`, format: 'iife' },
-    { dest: `${dest}/${file}.js`, format: 'cjs' },
+  input: './index.js',
+  output: [
+    { 
+      file: `${dest}/${file}.dev.js`, 
+      format: 'iife',
+      name: moduleName,
+      globals: {},
+      sourcemap: true,
+      banner,
+    },
+    {
+      file: `${dest}/${file}.js`,
+      format: 'cjs',
+      name: moduleName,
+      globals: {},
+      sourcemap: true,
+      banner,
+    },
   ],
-  moduleName,
-  banner,
-  external: [],
-  globals: {},
-  sourceMap: true,
+  external: ['gfx'],
   plugins: [
     resolve({
       jsnext: true,
