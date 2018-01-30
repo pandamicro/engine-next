@@ -1,5 +1,16 @@
 {
-  "useTexture": {},
-  "useModel": {},
-  "alphaTest": {}
+  "defines": [
+    {
+      "name": "useTexture",
+      "value": true
+    },
+    {
+      "name": "useModel",
+      "value": false
+    },
+    {
+      "name": "alphaTest",
+      "value": false
+    }
+  ]
 }
