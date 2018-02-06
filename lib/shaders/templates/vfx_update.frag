@@ -1,3 +1,7 @@
+#ifdef GL_ES
+precision highp float;
+#endif
+
 uniform sampler2D state;
 uniform vec2 statesize;
 uniform float dt;
@@ -12,7 +16,7 @@ varying vec2 index;
 const float BASE = 255.0;
 const float OFFSET = BASE * BASE / 2.0;
 const float MAX_VALUE = BASE * BASE;
-const float LIFE_SCALE = 60.0;
+const float LIFE_SCALE = 100.0;
 const float POSITION_SCALE = 1.0;
 const float ROTATION_SCALE = 1.0;
 const float COLOR_SCALE = 1.0;
@@ -55,7 +59,7 @@ vec4 updateSize (vec4 data, float life) {
 vec4 updateRotation (vec4 data, float life) {
     float rotation = decode(data.rg, ROTATION_SCALE);
     float deltaRotation = decode(data.ba, ROTATION_SCALE);
-    rotation += deltaRotation * dt / life;
+    rotation = mod(rotation + deltaRotation * dt / life, 180.0);
     return vec4(encode(rotation, ROTATION_SCALE), data.ba);
 }
 
@@ -76,7 +80,7 @@ vec4 updateControl (vec4 control1, vec4 control2, vec4 posData, float life) {
     }
     /* Mode B: angle & radius (control1), degreesPerSecond & deltaRadius (control2) */
     else {
-        float angle = mod(decode(control1.rg, ROTATION_SCALE), 360.0);
+        float angle = mod(decode(control1.rg, ROTATION_SCALE), 180.0);
         float radius = decode(control1.ba, radiusScale);
         float degreesPerSecond = decode(control2.rg, ROTATION_SCALE);
         float deltaRadius = decode(control2.ba, radiusScale);
@@ -97,7 +101,7 @@ vec4 updatePos (vec4 posData, vec4 control) {
     }
     /* Mode B */
     else {
-        float angle = radians(decode(control.rg, ROTATION_SCALE));
+        float angle = radians(mod(decode(control.rg, ROTATION_SCALE), 180.0));
         float radius = decode(control.ba, radiusScale);
         result.x = -cos(angle) * radius;
         result.y = -sin(angle) * radius;

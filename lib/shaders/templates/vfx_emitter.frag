@@ -1,3 +1,7 @@
+#ifdef GL_ES
+precision highp float;
+#endif
+
 uniform sampler2D noise;
 uniform sampler2D state;
 
@@ -53,7 +57,7 @@ const float NOISE_SCALE = 10000.0;
 const float POSITION_SCALE = 1.0;
 const float ROTATION_SCALE = 1.0;
 const float COLOR_SCALE = 1.0;
-const float LIFE_SCALE = 60.0;
+const float LIFE_SCALE = 100.0;
 const float START_SIZE_EQUAL_TO_END_SIZE = -1.0;
 const float START_RADIUS_EQUAL_TO_END_RADIUS = -1.0;
 
@@ -86,7 +90,7 @@ bool doEmit (vec4 randomD) {
 vec4 initLife (vec4 data, vec4 randomD) {
     /* decide whether to revive particle */
     if (doEmit(randomD)) {
-        float random2 = randomMinus1To1(randomD.ba);
+        float random2 = decode(randomD.ba, NOISE_SCALE);
         float plife = life + lifeVar * random2;
         vec2 l = encode(plife, LIFE_SCALE);
         return vec4(l, l);

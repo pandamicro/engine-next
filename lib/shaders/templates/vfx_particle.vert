@@ -19,7 +19,7 @@ varying vec2 uv0;
 
 const float BASE = 255.0;
 const float OFFSET = BASE * BASE / 2.0;
-const float LIFE_SCALE = 60.0;
+const float LIFE_SCALE = 100.0;
 const float POSITION_SCALE = 1.0;
 
 float decode(vec2 channels, float scale) {
