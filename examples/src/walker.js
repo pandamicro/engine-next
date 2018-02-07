@@ -43,7 +43,6 @@
                     null,
                     0
                 );
-                vb._data = null;
                 return vb;
             }, 16);
             this._ibPool = new RecyclePool(function () {
@@ -54,7 +53,6 @@
                     null,
                     0
                 );
-                ib._data = null;
                 return ib;
             }, 16);
             this._iaPool = new RecyclePool(function () {
@@ -218,14 +216,14 @@
             vb._format = vertexFormat;
             vb._numVertices = vertexCount;
             vb._bytes = vertexByte;
-            vb._data = vertexsData;
+            vb.update(0, vertexsData);
             device._stats.vb += vb._bytes;
         
             let ib = this._ibPool.add();
             device._stats.ib -= ib._bytes;
             ib._numIndices = indiceCount;
             ib._bytes = 2 * indiceCount;
-            ib._data = indicesData;
+            ib.update(0, indicesData);
             device._stats.ib += ib._bytes;
         
             let ia = this._iaPool.add();
