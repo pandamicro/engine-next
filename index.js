@@ -1,6 +1,5 @@
 // intenral
-import ForwardRendererWebGL from './lib/forward-renderer-webgl';
-import ForwardRendererCanvas from './lib/forward-renderer-canvas';
+import ForwardRenderer from './lib/forward-renderer';
 import shaders from './lib/shaders/index';
 
 import RenderData from './lib/scene/render-data';
@@ -15,21 +14,18 @@ import GraySpriteMaterial from './lib/materials/gray-sprite-material';
 import StencilMaterial from './lib/materials/stencil-material';
 import ParticleMaterial from './lib/materials/particle-material';
 
-import renderMode from './lib/utils/render-mode';
-
 // deps
 import * as math from 'vmath';
 import renderer from 'renderer.js';
 import gfx from 'gfx.js';
 import { RecyclePool, Pool } from 'memop';
-import canvas from './lib/canvas';
+// import canvas from './lib/canvas';
 
 const Scene = renderer.Scene;
 const Camera = renderer.Camera;
 const View = renderer.View;
-const ForwardRenderer = renderMode.supportWebGL ? ForwardRendererWebGL : ForwardRendererCanvas;
-const Texture2D = renderMode.supportWebGL ? gfx.Texture2D : canvas.Texture2D;
-const Device = renderMode.supportWebGL ? gfx.Device : canvas.Device;
+const Texture2D = gfx.Texture2D;
+const Device = gfx.Device;
 const Model = renderer.Model;
 const InputAssembler = renderer.InputAssembler;
 
@@ -64,7 +60,6 @@ let renderEngine = {
   shaders,
 
   // utils
-  renderMode,
   MaterialUtil,
 
   // memop
@@ -75,7 +70,7 @@ let renderEngine = {
   math,
   renderer,
   gfx,
-  canvas
+  // canvas
 };
 
 export default renderEngine;

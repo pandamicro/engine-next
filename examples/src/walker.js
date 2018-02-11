@@ -2,7 +2,7 @@
     'use strict';
     const engine = window.engine;
   
-    const { gfx, renderMode, RecyclePool, InputAssembler, ForwardRenderer } = engine;
+    const { gfx, RecyclePool, InputAssembler, ForwardRenderer } = engine;
     const { Scene, Camera, Model, SpriteMaterial } = engine;
     const { mat4 } = engine.math;
 
