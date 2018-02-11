@@ -2,7 +2,7 @@
 
 const fsJetpack = require('fs-jetpack');
 const pjson = require('../package.json');
-const resolve = require('rollup-plugin-node-resolve');
+const resolve = require('@gamedev-js/rollup-plugin-node-resolve');
 
 let banner = `
 /*
