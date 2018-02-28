@@ -19,7 +19,7 @@ import * as math from 'vmath';
 import renderer from 'renderer.js';
 import gfx from 'gfx.js';
 import { RecyclePool, Pool } from 'memop';
-// import canvas from './lib/canvas';
+import canvas from './lib/canvas';
 
 const Scene = renderer.Scene;
 const Camera = renderer.Camera;
@@ -34,6 +34,9 @@ let renderEngine = {
   Device,
   ForwardRenderer,
   Texture2D,
+
+  // Canvas render support
+  canvas,
 
   // render scene
   Scene,
