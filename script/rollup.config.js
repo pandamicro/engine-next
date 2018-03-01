@@ -7,8 +7,8 @@ const resolve = require('@gamedev-js/rollup-plugin-node-resolve');
 let banner = `
 /*
  * ${pjson.name} v${pjson.version}
- * (c) ${new Date().getFullYear()} @pandamicro
- * Released under the MIT License.
+ * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.  
+ * Released under the Private License.  
  */
 `;
 

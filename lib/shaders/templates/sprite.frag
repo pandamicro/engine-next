@@ -1,3 +1,5 @@
+// Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.  
+ 
 #ifdef useTexture
   uniform sampler2D texture;
   varying vec2 uv0;

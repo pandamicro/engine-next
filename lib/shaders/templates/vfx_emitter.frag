@@ -20,6 +20,8 @@ uniform vec2 pos;
 uniform vec2 posVar;
 uniform vec4 color;
 uniform vec4 colorVar;
+// Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.  
+ 
 uniform vec4 endColor;
 uniform vec4 endColorVar;
 uniform float size;

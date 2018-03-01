@@ -1,3 +1,5 @@
+// Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.  
+ 
 uniform mat4 viewProj;
 attribute vec3 a_position;
 attribute vec4 a_color;
