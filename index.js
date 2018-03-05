@@ -3,6 +3,7 @@ import ForwardRenderer from './lib/forward-renderer';
 import shaders from './lib/shaders/index';
 
 import RenderData from './lib/scene/render-data';
+import IARenderData from './lib/scene/ia-render-data';
 
 import Particles from './lib/vfx/particles';
 
@@ -44,6 +45,7 @@ let renderEngine = {
   View,
   Model,
   RenderData,
+  IARenderData,
   InputAssembler,
 
   // vfx
@@ -73,7 +75,6 @@ let renderEngine = {
   math,
   renderer,
   gfx,
-  // canvas
 };
 
 export default renderEngine;
