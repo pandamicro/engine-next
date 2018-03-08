@@ -1,7 +1,7 @@
 {
   "name": "engine-next.js",
-  "version": "0.3.1",
-  "description": "Cocos Creator 2D Rendering Engine",
+  "version": "1.0.0",
+  "description": "Cocos Creator low level rendering engine",
   "main": "dist/engine.js",
   "module": "index.js",
   "jsnext:main": "index.js",
