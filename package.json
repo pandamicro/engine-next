@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/pandamicro/engine-next/issues",
   "dependencies": {
-    "gfx.js": "1.2.12",
+    "gfx.js": "1.2.15",
     "input.js": "1.1.6",
     "memop": "1.6.0",
     "renderer.js": "git+ssh://git@github.com:cocos-creator/renderer.js.git#1.8.2",
