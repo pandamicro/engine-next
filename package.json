@@ -1,5 +1,5 @@
 {
-  "name": "engine-next.js",
+  "name": "engine-next",
   "version": "1.0.0",
   "description": "Cocos Creator low level rendering engine",
   "main": "dist/engine.js",
