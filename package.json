@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
   "name": "render-engine",
+  "version": "1.0.1",
   "description": "Cocos Creator low level rendering engine",
   "main": "dist/engine.js",
   "module": "index.js",
