@@ -1,6 +1,6 @@
 {
-  "name": "engine-next",
   "version": "1.0.0",
+  "name": "render-engine",
   "description": "Cocos Creator low level rendering engine",
   "main": "dist/engine.js",
   "module": "index.js",
