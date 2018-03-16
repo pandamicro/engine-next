@@ -8,6 +8,7 @@ import IARenderData from './lib/scene/ia-render-data';
 import Particles from './lib/vfx/particles';
 
 import Asset from './lib/assets/asset';
+import TextureAsset from './lib/assets/texture';
 import Material from './lib/assets/material';
 import MaterialUtil from './lib/utils/material-util';
 import SpriteMaterial from './lib/materials/sprite-material';
@@ -53,6 +54,7 @@ let renderEngine = {
   
   // assets
   Asset,
+  TextureAsset,
   Material,
   
   // materials
