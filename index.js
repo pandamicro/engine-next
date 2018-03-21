@@ -10,7 +10,6 @@ import Particles from './lib/vfx/particles';
 import Asset from './lib/assets/asset';
 import TextureAsset from './lib/assets/texture';
 import Material from './lib/assets/material';
-import MaterialUtil from './lib/utils/material-util';
 import SpriteMaterial from './lib/materials/sprite-material';
 import GraySpriteMaterial from './lib/materials/gray-sprite-material';
 import StencilMaterial from './lib/materials/stencil-material';
@@ -65,9 +64,6 @@ let renderEngine = {
 
   // shaders
   shaders,
-
-  // utils
-  MaterialUtil,
 
   // memop
   RecyclePool,
