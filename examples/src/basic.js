@@ -170,11 +170,27 @@
         flipY: false,
         images : [image]
       });
+      texture.getImpl = function () {
+        return this;
+      }
+      texture.getId = function () {
+        return image.src;
+      }
       material.texture = texture;
+      material.updateHash();
 
       for (let i = 0; i < 20; ++i) {
         spawnNode();
       }
+
+      // Test update hash
+      var start = performance.now();
+      for (var count = 0; count < 10000; count++) {
+          material.updateHash();
+      }
+      var dur = performance.now() - start;
+      console.log(dur);
+      number.innerText = dur;
     }
   });
 
