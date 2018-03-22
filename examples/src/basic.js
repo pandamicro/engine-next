@@ -190,7 +190,7 @@
       }
       var dur = performance.now() - start;
       console.log(dur);
-      number.innerText = dur;
+      number.innerText = dur.toFixed(0) + ' - ' + material._hash;
     }
   });
 
