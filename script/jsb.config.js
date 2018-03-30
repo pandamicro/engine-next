@@ -43,7 +43,7 @@ module.exports = {
   output: [
     { 
       file: `${dest}/${file}.jsb.js`, 
-      format: 'iife',
+      format: 'cjs',
       name: moduleName,
       sourcemap: false,
       banner,
