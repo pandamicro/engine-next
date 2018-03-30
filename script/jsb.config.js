@@ -55,6 +55,7 @@ module.exports = {
       main: true,
     }),
     ignore({
+      '/forward-renderer': 'window.renderer.ForwardRenderer',
       '/renderer.js': 'window.renderer',
       '/gfx.js': 'window.gfx'
     }),
