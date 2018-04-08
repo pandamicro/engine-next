@@ -30,6 +30,9 @@ const Device = gfx.Device;
 const Model = renderer.Model;
 const InputAssembler = renderer.InputAssembler;
 
+// Add stage to renderer
+renderer.addStage('transparent');
+
 let renderEngine = {
   // core classes
   Device,
