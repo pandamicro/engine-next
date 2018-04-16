@@ -31,7 +31,7 @@ const Model = renderer.Model;
 const InputAssembler = renderer.InputAssembler;
 
 // Add stage to renderer
-renderer.addStage('transparent');
+renderer.config.addStage('transparent');
 
 let renderEngine = {
   // core classes
