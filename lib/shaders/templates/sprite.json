@@ -11,6 +11,14 @@
     {
       "name": "alphaTest",
       "value": false
+    },
+    {
+      "name": "use2DPos",
+      "value": true
+    },
+    {
+      "name": "useColor",
+      "value": true
     }
   ]
 }

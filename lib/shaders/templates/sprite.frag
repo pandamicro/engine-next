@@ -9,10 +9,18 @@
   uniform float alphaThreshold;
 #endif
 
-varying vec4 v_fragmentColor;
+#ifdef useColor
+  uniform vec4 color;
+#else
+  varying vec4 v_fragmentColor;
+#endif
 
 void main () {
-  vec4 o = v_fragmentColor;
+  #ifdef useColor
+    vec4 o = color;
+  #else
+    vec4 o = v_fragmentColor;
+  #endif
 
   #ifdef useTexture
     o *= texture2D(texture, uv0);
