@@ -11,14 +11,14 @@
 
 #ifdef useUniformColor
   uniform vec4 color;
-#elif
+#else
   varying vec4 v_fragmentColor;
 #endif
 
 void main () {
   #ifdef useUniformColor
     vec4 o = color;
-  #elif
+  #else
     vec4 o = v_fragmentColor;
   #endif
 
