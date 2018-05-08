@@ -9,14 +9,14 @@
   uniform float alphaThreshold;
 #endif
 
-#ifdef useUniformColor
+#ifdef useColor
   uniform vec4 color;
 #else
   varying vec4 v_fragmentColor;
 #endif
 
 void main () {
-  #ifdef useUniformColor
+  #ifdef useColor
     vec4 o = color;
   #else
     vec4 o = v_fragmentColor;

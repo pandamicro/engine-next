@@ -13,11 +13,11 @@
       "value": false
     },
     {
-      "name": "use2D",
+      "name": "use2DPos",
       "value": true
     },
     {
-      "name": "useUniformColor",
+      "name": "useColor",
       "value": true
     }
   ]

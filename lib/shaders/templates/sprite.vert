@@ -2,7 +2,7 @@
  
 uniform mat4 viewProj;
 
-#ifdef use2D
+#ifdef use2DPos
 attribute vec2 a_position;
 #else
 attribute vec3 a_position;
@@ -19,7 +19,7 @@ attribute vec4 a_color;
   varying vec2 uv0;
 #endif
 
-#ifndef useUniformColor
+#ifndef useColor
 varying lowp vec4 v_fragmentColor;
 #endif
 
@@ -31,13 +31,13 @@ void main () {
     mvp = viewProj;
   #endif
 
-  #ifdef use2D
+  #ifdef use2DPos
   vec4 pos = mvp * vec4(a_position, 0, 1);
   #else
   vec4 pos = mvp * vec4(a_position, 1);
   #endif
 
-  #ifndef useUniformColor
+  #ifndef useColor
   v_fragmentColor = a_color;
   #endif
 
