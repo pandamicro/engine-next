@@ -5,8 +5,6 @@ import shaders from './lib/shaders/index';
 import RenderData from './lib/scene/render-data';
 import IARenderData from './lib/scene/ia-render-data';
 
-import Particles from './lib/vfx/particles';
-
 import Asset from './lib/assets/asset';
 import TextureAsset from './lib/assets/texture';
 import Material from './lib/assets/material';
@@ -55,9 +53,6 @@ let renderEngine = {
   RenderData,
   IARenderData,
   InputAssembler,
-
-  // vfx
-  Particles,
   
   // assets
   Asset,
