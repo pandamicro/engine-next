@@ -1,9 +1,5 @@
-import './lib/jsb-adapter/gfx';
-import './lib/jsb-adapter/renderer';
-
-let gfx = window.gfx;
-let renderer = window.renderer;
-let ForwardRenderer = window.renderer.ForwardRenderer;
+import gfx from './lib/jsb-adapter/jsb-gfx';
+import renderer from './lib/jsb-adapter/jsb-renderer';
 
 // intenral
 import shaders from './lib/shaders/index';
@@ -23,34 +19,26 @@ import * as math from 'vmath';
 import { RecyclePool, Pool } from 'memop';
 import canvas from './lib/canvas';
 
-const Scene = renderer.Scene;
-const Camera = renderer.Camera;
-const View = renderer.View;
-const Texture2D = gfx.Texture2D;
-const Device = gfx.Device;
-const Model = renderer.Model;
-const InputAssembler = renderer.InputAssembler;
-
 // Add stage to renderer
 renderer.config.addStage('transparent');
 
 let renderEngine = {
   // core classes
-  Device,
-  ForwardRenderer,
-  Texture2D,
+  Device: gfx.Device,
+  ForwardRenderer: renderer.ForwardRenderer,
+  Texture2D: gfx.Texture2D,
 
   // Canvas render support
   canvas,
 
   // render scene
-  Scene,
-  Camera,
-  View,
-  Model,
+  Scene: renderer.Scene,
+  Camera: renderer.Camera,
+  View: renderer.View,
+  Model: renderer.Model,
   RenderData,
   IARenderData,
-  InputAssembler,
+  InputAssembler: renderer.InputAssembler,
   
   // assets
   Asset,
