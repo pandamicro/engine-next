@@ -1,5 +1,11 @@
+import './lib/jsb-adapter/gfx';
+import './lib/jsb-adapter/renderer';
+
+let gfx = window.gfx;
+let renderer = window.renderer;
+let ForwardRenderer = window.renderer.ForwardRenderer;
+
 // intenral
-import ForwardRenderer from './lib/forward-renderer';
 import shaders from './lib/shaders/index';
 
 import RenderData from './lib/scene/render-data';
@@ -14,8 +20,6 @@ import StencilMaterial from './lib/materials/stencil-material';
 
 // deps
 import * as math from 'vmath';
-import renderer from 'renderer.js';
-import gfx from 'gfx.js';
 import { RecyclePool, Pool } from 'memop';
 import canvas from './lib/canvas';
 
@@ -27,7 +31,8 @@ const Device = gfx.Device;
 const Model = renderer.Model;
 const InputAssembler = renderer.InputAssembler;
 
-renderer.addStage('transparent');
+// Add stage to renderer
+renderer.config.addStage('transparent');
 
 let renderEngine = {
   // core classes

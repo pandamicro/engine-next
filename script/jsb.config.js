@@ -39,7 +39,7 @@ let file = 'render-engine';
 let moduleName = 'renderEngine';
 
 module.exports = {
-  input: './index.js',
+  input: './index.jsb.js',
   output: [
     { 
       file: `${dest}/${file}.jsb.js`, 
