@@ -10,9 +10,9 @@
     "pretest": "npm run build:dev",
     "build": "npm run build:dev && npm run build:min",
     "build:shader": "shdc --chunks ./lib/shaders/chunks --templates ./lib/shaders/templates",
-    "build:dev": "npm run build:shader && rollup -c ./script/web.config.js && rollup -c ./script/jsb.config.js",
+    "build:dev": "npm run build:shader && rollup -c ./script/web.config.js && rollup -c ./script/jsb.config.js && rollup -c ./script/canvas.config.js",
     "build:min": "uglifyjs ./dist/engine.dev.js --mangle --source-map url=engine.min.js.map -o ./dist/engine.min.js",
-    "dev": "rollup -w -c ./script/web.config.js && rollup -w -c ./script/jsb.config.js",
+    "dev": "rollup -w -c ./script/web.config.js",
     "start": "electron ./examples",
     "server": "preview -p 8003 -e examples",
     "test": "tap test/*.spec.js"
