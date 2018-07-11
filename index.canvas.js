@@ -8,6 +8,7 @@ import canvas from './lib/canvas';
 
 const Texture2D = canvas.Texture2D;
 const Device = canvas.Device;
+const gfx = {};
 
 let renderEngine = {
   // core classes
@@ -25,7 +26,8 @@ let renderEngine = {
   Pool,
 
   // modules
-  math
+  math,
+  gfx
 };
 
 export default renderEngine;
