@@ -2,8 +2,8 @@
  
 uniform mat4 viewProj;
 attribute vec3 a_position;
-attribute vec2 a_uv0;
-varying vec2 uv0;
+attribute mediump vec2 a_uv0;
+varying mediump vec2 uv0;
 
 void main () {
   vec4 pos = viewProj * vec4(a_position, 1);
