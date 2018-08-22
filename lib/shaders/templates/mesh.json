@@ -1,0 +1,16 @@
+{
+    "defines": [
+      {
+        "name": "useTexture",
+        "value": true
+      },
+      {
+        "name": "useModel",
+        "value": false
+      },
+      {
+        "name": "useSkinning",
+        "value": true
+      }
+    ]
+  }

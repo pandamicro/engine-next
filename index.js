@@ -11,6 +11,7 @@ import Material from './lib/assets/material';
 import SpriteMaterial from './lib/materials/sprite-material';
 import GraySpriteMaterial from './lib/materials/gray-sprite-material';
 import StencilMaterial from './lib/materials/stencil-material';
+import MeshMaterial from './lib/materials/mesh-material';
 
 // deps
 import * as math from 'vmath';
@@ -63,6 +64,7 @@ let renderEngine = {
   SpriteMaterial,
   GraySpriteMaterial,
   StencilMaterial,
+  MeshMaterial,
 
   // shaders
   shaders,
