@@ -10,9 +10,9 @@
     "pretest": "npm run build:dev",
     "build": "npm run build:dev && npm run build:min",
     "build:shader": "shdc --chunks ./lib/shaders/chunks --templates ./lib/shaders/templates",
-    "build:dev": "npm run build:shader && rollup -c ./script/web.config.js && rollup -c ./script/jsb.config.js",
+    "build:dev": "npm run build:shader && rollup -c ./script/web.config.js && rollup -c ./script/jsb.config.js && rollup -c ./script/canvas.config.js",
     "build:min": "uglifyjs ./dist/engine.dev.js --mangle --source-map url=engine.min.js.map -o ./dist/engine.min.js",
-    "dev": "rollup -w -c ./script/web.config.js && rollup -w -c ./script/jsb.config.js",
+    "dev": "rollup -w -c ./script/web.config.js",
     "start": "electron ./examples",
     "server": "preview -p 8003 -e examples",
     "test": "tap test/*.spec.js"
@@ -33,10 +33,10 @@
   },
   "homepage": "https://github.com/pandamicro/engine-next/issues",
   "dependencies": {
-    "gfx.js": "git+ssh://git@github.com:cocos-creator/gfx.js.git#1.3.0",
+    "gfx.js": "git+ssh://git@github.com:cocos-creator/gfx.js.git#1.3.2",
     "input.js": "1.1.6",
     "memop": "1.6.0",
-    "renderer.js": "git+ssh://git@github.com:cocos-creator/renderer.js.git#1.8.4",
+    "renderer.js": "git+ssh://git@github.com:cocos-creator/renderer.js.git#1.8.8",
     "scene-graph": "1.3.5",
     "vmath": "1.4.7"
   },

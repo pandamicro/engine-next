@@ -2,17 +2,17 @@
  
 #ifdef useTexture
   uniform sampler2D texture;
-  varying vec2 uv0;
+  varying mediump vec2 uv0;
 #endif
 
 #ifdef alphaTest
-  uniform float alphaThreshold;
+  uniform lowp float alphaThreshold;
 #endif
 
 #ifdef useColor
-  uniform vec4 color;
+  uniform lowp vec4 color;
 #else
-  varying vec4 v_fragmentColor;
+  varying lowp vec4 v_fragmentColor;
 #endif
 
 void main () {

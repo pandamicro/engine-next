@@ -1,9 +1,9 @@
 'use strict';
 
+const fsJetpack = require('fs-jetpack');
 const pjson = require('../package.json');
 const resolve = require('@gamedev-js/rollup-plugin-node-resolve');
 const buble = require('rollup-plugin-buble');
-const ignore = require('./utils/ignore');
 
 let banner = `
 /****************************************************************************
@@ -39,10 +39,10 @@ let file = 'render-engine';
 let moduleName = 'renderEngine';
 
 module.exports = {
-  input: './index.jsb.js',
+  input: './index.canvas.js',
   output: [
-    { 
-      file: `${dest}/${file}.jsb.js`, 
+    {
+      file: `${dest}/${file}.canvas.js`,
       format: 'cjs',
       name: moduleName,
       sourcemap: false,
@@ -53,11 +53,6 @@ module.exports = {
     resolve({
       jsnext: true,
       main: true,
-    }),
-    ignore({
-      '/forward-renderer': 'window.renderer.ForwardRenderer',
-      '/renderer.js': 'window.renderer',
-      '/gfx.js': 'window.gfx'
     }),
     buble()
   ],

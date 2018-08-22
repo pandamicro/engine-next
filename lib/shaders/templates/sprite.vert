@@ -8,17 +8,18 @@ attribute vec2 a_position;
 attribute vec3 a_position;
 #endif
 
+attribute lowp vec4 a_color;
+
 #ifdef useModel
   uniform mat4 model;
 #endif
 
 #ifdef useTexture
-  attribute vec2 a_uv0;
-  varying vec2 uv0;
+  attribute mediump vec2 a_uv0;
+  varying mediump vec2 uv0;
 #endif
 
 #ifndef useColor
-attribute vec4 a_color;
 varying lowp vec4 v_fragmentColor;
 #endif
 
