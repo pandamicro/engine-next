@@ -11,6 +11,10 @@
       {
         "name": "useSkinning",
         "value": true
+      },
+      {
+        "name": "useJointsTexture",
+        "value": true
       }
     ]
   }

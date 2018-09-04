@@ -3,6 +3,7 @@
 attribute vec4 a_weights;
 attribute vec4 a_joints;
 
+#ifdef useJointsTexture
 uniform sampler2D u_jointsTexture;
 uniform float u_jointsTextureSize;
 
@@ -24,6 +25,13 @@ mat4 getBoneMatrix(const in float i) {
 
   return mat4(v1, v2, v3, v4);
 }
+#else
+uniform mat4 u_jointMatrices[64];
+
+mat4 getBoneMatrix(const in float i) {
+  return u_jointMatrices[int(i)];
+}
+#endif
 
 mat4 skinMatrix() {
   return

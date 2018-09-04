@@ -1,18 +1,19 @@
 // Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.  
  
-uniform sampler2D texture;
-varying vec2 uv0;
+#ifdef useTexture
+  uniform sampler2D texture;
+  varying vec2 uv0;
+#endif
+
 
 uniform vec4 color;
 
 void main () {
-  #ifdef useColor
-    vec4 o = color;
-  #else
-    vec4 o = v_fragmentColor;
+  vec4 o = color;
+  
+  #ifdef useTexture
+    o *= texture2D(texture, uv0);
   #endif
-
-  o *= texture2D(texture, uv0);
 
   gl_FragColor = o;
 }
