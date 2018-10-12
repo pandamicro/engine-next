@@ -41,7 +41,7 @@
     "vmath": "1.4.7"
   },
   "devDependencies": {
-    "@gamedev-js/rollup-plugin-node-resolve": "^3.0.0",
+    "@cocos-creator/rollup-plugin-node-resolve": "^3.0.0",
     "electron": "^1.7.4",
     "fs-jetpack": "^1.1.0",
     "lstats.js": "^1.2.7",
