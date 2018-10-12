@@ -15,6 +15,10 @@
       {
         "name": "useJointsTexture",
         "value": true
+      },
+      {
+        "name": "useAttributeColor",
+        "value": false
       }
     ]
   }
