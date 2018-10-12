@@ -33,15 +33,15 @@
   },
   "homepage": "https://github.com/pandamicro/engine-next/issues",
   "dependencies": {
-    "gfx.js": "git+ssh://git@github.com:cocos-creator/gfx.js.git#1.3.2",
+    "gfx.js": "git+ssh://git@github.com:cocos-creator/gfx.js.git#1.3.3",
     "input.js": "1.1.6",
     "memop": "1.6.0",
-    "renderer.js": "git+ssh://git@github.com:cocos-creator/renderer.js.git#1.8.8",
+    "renderer.js": "git+ssh://git@github.com:cocos-creator/renderer.js.git#1.8.9",
     "scene-graph": "1.3.5",
     "vmath": "1.4.7"
   },
   "devDependencies": {
-    "@cocos-creator/rollup-plugin-node-resolve": "^3.0.0",
+    "@gamedev-js/rollup-plugin-node-resolve": "^3.0.0",
     "electron": "^1.7.4",
     "fs-jetpack": "^1.1.0",
     "lstats.js": "^1.2.7",
