@@ -1,6 +1,6 @@
 {
   "name": "render-engine",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Cocos Creator low level rendering engine",
   "main": "dist/engine.js",
   "module": "index.js",
@@ -36,7 +36,7 @@
     "gfx.js": "git+ssh://git@github.com:cocos-creator/gfx.js.git#1.3.3",
     "input.js": "1.1.6",
     "memop": "1.6.0",
-    "renderer.js": "git+ssh://git@github.com:cocos-creator/renderer.js.git#1.8.9",
+    "renderer.js": "git+ssh://git@github.com:cocos-creator/renderer.js.git#1.8.10",
     "scene-graph": "1.3.5",
     "vmath": "1.4.7"
   },
