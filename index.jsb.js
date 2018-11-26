@@ -1,5 +1,5 @@
-import gfx from './lib/jsb-adapter/jsb-gfx';
-import renderer from './lib/jsb-adapter/jsb-renderer';
+const gfx = window.gfx;
+const renderer = window.renderer;
 
 // intenral
 import shaders from './lib/shaders/index';
