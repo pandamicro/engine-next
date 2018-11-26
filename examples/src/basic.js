@@ -74,6 +74,8 @@
     node.speedX = Math.random() * 10;
     node.speedY = (Math.random() * 10) - 5;
     node.anchorPoint = {x: 0.5, y: 0.5};
+    node.vertDirty = false;
+    node.uvDirty = false;
 
     vec3.set(node.lpos,
       randomRange(0, canvasElt.width),
@@ -148,7 +150,7 @@
             bunny.lpos.y = maxY;
         }
 
-        bunny.renderData.vertDirty = true;
+        bunny.vertDirty = true;
     }
   }
 

@@ -135,7 +135,7 @@
                 data[3].u = r;
                 data[3].v = t;
 
-                renderData.uvDirty = false;
+                node.uvDirty = false;
             }
         },
 
@@ -160,7 +160,7 @@
             data[3].x = r;
             data[3].y = t;
     
-            renderData.vertDirty = false;
+            node.vertDirty = false;
         },
 
         fillBuffers (node, vertexOffset, indiceOffset, vertexId, vbuf, uintbuf, ibuf) {
@@ -262,8 +262,7 @@
 
         renderScene (scene, nodes) {
             let node, renderData, effect, needNewBuf;
-            let vertexId = 0,
-                vertexOffset = 0,
+            let vertexOffset = 0,
                 indiceOffset = 0,
                 currEffect = null;
             this.reset();
@@ -272,10 +271,10 @@
             {
                 node = nodes[i];
                 renderData = node.renderData;
-                if (renderData.uvDirty) {
+                if (node.uvDirty) {
                     this.updateUV(node);
                 }
-                if (renderData.vertDirty) {
+                if (node.vertDirty) {
                     this.updateVerts(node);
                 }
 
