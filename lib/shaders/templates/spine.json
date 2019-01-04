@@ -1,0 +1,20 @@
+{
+    "defines": [
+      {
+        "name": "useModel",
+        "value": true
+      },
+      {
+        "name": "alphaTest",
+        "value": false
+      },
+      {
+        "name": "use2DPos",
+        "value": true
+      },
+      {
+        "name": "useTint",
+        "value": false
+      }
+    ]
+  }
