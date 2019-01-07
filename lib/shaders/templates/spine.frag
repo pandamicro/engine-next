@@ -17,7 +17,7 @@ void main () {
   vec4 finalColor;
 
   #ifdef useTint
-    finalColor.a = v_light.a * v_dark.a;
+    finalColor.a = v_light.a * texColor.a;
     finalColor.rgb = ((texColor.a - 1.0) * v_dark.a + 1.0 - texColor.rgb) * v_dark.rgb + texColor.rgb * v_light.rgb;
   #else
     finalColor = texColor * v_light;
